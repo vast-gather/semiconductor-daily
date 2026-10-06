@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>半导体日记 · 2026-10-05</title>
+<style>
+:root{
+  --bg:#f6f7f9;
+  --card:#ffffff;
+  --text:#1b1f24;
+  --text-2:#4b5563;
+  --text-3:#6b7280;
+  --line:#e3e6ea;
+  --accent:#1d6fdc;
+  --accent-soft:#e8f0fd;
+  --novice:#1a8a5a;
+  --novice-soft:#e6f6ee;
+  --warn:#b45309;
+  --warn-soft:#fdf3e3;
+  --shadow:0 1px 2px rgba(16,24,40,.05),0 8px 24px rgba(16,24,40,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0f1216;
+    --card:#171b21;
+    --text:#e8eaee;
+    --text-2:#b6bcc6;
+    --text-3:#8b929d;
+    --line:#2a303a;
+    --accent:#5aa2ff;
+    --accent-soft:#16233a;
+    --novice:#4ecf95;
+    --novice-soft:#132b22;
+    --warn:#e0a458;
+    --warn-soft:#2c2417;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:15px;line-height:1.75;
+}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ── 顶部固定栏 ── */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:color-mix(in srgb, var(--card) 88%, transparent);
+  backdrop-filter:saturate(180%) blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.topbar-in{
+  max-width:860px;margin:0 auto;padding:10px 18px;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+}
+.brand{font-weight:700;letter-spacing:.2px;font-size:15px;flex:1;min-width:150px}
+.brand small{display:block;font-weight:400;color:var(--text-3);font-size:11.5px;letter-spacing:0}
+.switch{display:flex;gap:2px;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:2px}
+.switch button{
+  font:inherit;font-size:13px;padding:5px 14px;border:0;border-radius:7px;
+  background:transparent;color:var(--text-2);cursor:pointer;transition:.15s;
+}
+.switch button:hover{color:var(--text)}
+.switch button.on{background:var(--accent);color:#fff}
+body.view-novice .switch button.on{background:var(--novice)}
+body.view-novice .topbar{border-bottom-color:color-mix(in srgb,var(--novice) 35%,var(--line))}
+
+/* ── 视图切换核心 ── */
+body.view-expert .t-novice{display:none !important}
+body.view-novice .t-expert{display:none !important}
+
+.wrap{max-width:860px;margin:0 auto;padding:26px 18px 80px}
+
+/* ── 报头 ── */
+.head{margin-bottom:22px}
+.head h1{font-size:26px;line-height:1.3;margin:0 0 8px;letter-spacing:-.3px}
+.date{color:var(--text-2);font-size:14px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.stat{
+  background:var(--card);border:1px solid var(--line);border-radius:8px;
+  padding:6px 12px;font-size:12.5px;color:var(--text-2);
+}
+.stat b{color:var(--text);font-variant-numeric:tabular-nums}
+.trial{
+  margin-top:14px;border-left:3px solid var(--warn);
+  background:var(--warn-soft);color:var(--text-2);
+  padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;
+}
+.trial b{color:var(--warn)}
+
+/* ── 锚点导航 ── */
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 6px}
+.nav a{
+  border:1px solid var(--line);background:var(--card);border-radius:999px;
+  padding:5px 14px;font-size:13px;color:var(--text-2);
+}
+.nav a:hover{border-color:var(--accent);color:var(--accent);text-decoration:none}
+
+/* ── 主线 ── */
+.lead{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:18px 20px;margin:18px 0 26px;box-shadow:var(--shadow);
+  border-top:3px solid var(--accent);
+}
+body.view-novice .lead{border-top-color:var(--novice)}
+.lead h2{margin:0 0 8px;font-size:15px;letter-spacing:.4px;color:var(--accent)}
+body.view-novice .lead h2{color:var(--novice)}
+.lead p{margin:0;color:var(--text-2);font-size:14.5px}
+
+/* ── 分区 ── */
+section{margin:0 0 34px;scroll-margin-top:72px}
+.sec-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 4px;padding-top:6px}
+.sec-h h3{font-size:19px;margin:0;letter-spacing:-.2px}
+.sec-h .cnt{font-size:12.5px;color:var(--text-3);font-weight:400}
+.sec-note{color:var(--text-3);font-size:13px;margin:0 0 16px}
+.bar{height:3px;width:46px;border-radius:2px;background:var(--accent);margin:8px 0 16px}
+body.view-novice .bar{background:var(--novice)}
+
+/* ── 条目 ── */
+.item{
+  background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:15px 18px;margin:0 0 12px;box-shadow:var(--shadow);
+}
+.item:hover{border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
+body.view-novice .item:hover{border-color:color-mix(in srgb,var(--novice) 40%,var(--line))}
+.item h4{font-size:15.5px;line-height:1.55;margin:0 0 9px;font-weight:700}
+.item p{margin:0 0 7px;color:var(--text-2);font-size:14.5px}
+.item p:last-of-type{margin-bottom:0}
+.impact{color:var(--text) !important}
+.t-expert .impact{border-left:2px solid var(--accent);padding-left:10px}
+.t-novice .impact{border-left:2px solid var(--novice);padding-left:10px}
+.src{
+  display:block;margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);
+  font-size:12px;color:var(--text-3);
+}
+
+/* ── 跟踪信号 ── */
+.signals{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:18px 20px;box-shadow:var(--shadow);
+}
+.signals h3{margin:0 0 12px;font-size:17px}
+.signals ol{margin:0;padding-left:20px}
+.signals li{margin-bottom:10px;color:var(--text-2);font-size:14.5px}
+.signals li b{color:var(--text)}
+
+footer{
+  max-width:860px;margin:0 auto;padding:20px 18px 60px;
+  color:var(--text-3);font-size:12.5px;border-top:1px solid var(--line);
+}
+footer p{margin:0 0 6px}
+
+@media print{
+  .topbar,.nav{display:none}
+  body{background:#fff}
+  .item,.lead,.signals{box-shadow:none;break-inside:avoid}
+}
+@media (max-width:600px){
+  .wrap{padding:18px 12px 60px}
+  .head h1{font-size:21px}
+  body{font-size:14px}
+  .item{padding:13px 14px}
+}
+
+/* ══ 栏目切换卡带（Deck） ══
+   借鉴《栏目切换 UI 与交互规范》v1.0 的 C2~C5（卡带 / 指示器 / 渐隐 / 箭头）：
+   · 整条轨道 translateX 平移，让选中卡落在视口正中（纯数学计算、零 DOM 测量）
+   · 选中卡用 transform:scale() 放大 —— 不参与布局，故各卡水平中心间距恒定，
+     平移步长恒定；同时写更大的 height 只为视觉外框，不影响水平中心
+   · 动效统一 200ms cubic-bezier(.2,0,0,1)，遮罩 200ms 淡入淡出
+   规范的取色基于深蓝吸顶条（硬编码 #0A4C8C + 白卡），此处全部反向映射为
+   项目 CSS 变量，以兼容浅色/深色主题与专家版/小白版两种强调色。
+   结构与容器位置由 normalize_tabs() 每次强制重建 —— 不要手写这一块。 */
+.deck-host{
+  width:100%;
+  /* 动效 Token 与卡带尺寸在此局部声明，不写 :root，避免影响页面其它部分 */
+  --motion-fast:150ms;--motion-base:200ms;--ease-standard:cubic-bezier(.2,0,0,1);
+  --deck-w:96px;--deck-h-side:28px;--deck-h-active:36px;--deck-scale:1.2;
+}
+/* 整页横滑切栏：纵向滚动交给浏览器原生，横向由脚本接管 */
+body{touch-action:pan-y}
+/* 视口：裁掉视口外的卡，给选中卡的阴影留上下余量 */
+.deck-zone{position:relative;overflow:hidden;padding:7px 0 4px}
+.deck-wrap{position:relative;height:calc(var(--deck-h-active) + 12px)}
+/* 两端渐隐遮罩：仅当该侧确有卡被裁出视口时点亮；不遮挡卡片点击 */
+.deck-fade{
+  position:absolute;top:0;bottom:0;width:22px;z-index:1;
+  pointer-events:none;opacity:0;
+  transition:opacity var(--motion-base) var(--ease-standard);
+}
+.deck-fade.left{
+  left:0;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--card,#fff) 88%,transparent) 0%,transparent 100%);
+}
+.deck-fade.right{
+  right:0;
+  background:linear-gradient(270deg,color-mix(in srgb,var(--card,#fff) 88%,transparent) 0%,transparent 100%);
+}
+.deck-fade.on{opacity:1}
+/* 轨道：等宽卡 + 整条平移（translateX 由脚本赋值，绝对值而非累加） */
+.tabs{
+  display:flex;align-items:center;gap:8px;width:max-content;height:100%;
+  will-change:transform;
+  transition:transform var(--motion-base) var(--ease-standard);
+}
+/* 栏目卡 */
+.tabs button{
+  flex:0 0 auto;width:var(--deck-w);height:var(--deck-h-side);padding:0;
+  display:inline-flex;align-items:center;justify-content:center;
+  font:inherit;font-size:13px;font-weight:500;line-height:1.2;white-space:nowrap;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  border:1px solid var(--line,#e3e6ea);background:var(--bg,#f6f7f9);
+  color:var(--text,#1b1f24);border-radius:10px;
+  transition:transform var(--motion-base) var(--ease-standard),
+             background-color var(--motion-base) var(--ease-standard),
+             color var(--motion-base) var(--ease-standard),
+             border-color var(--motion-base) var(--ease-standard),
+             box-shadow var(--motion-base) var(--ease-standard);
+}
+/* 选中卡：放大 + 强调色填充（scale 不占布局 → 两侧卡水平中心不跳动） */
+.tabs button.on{
+  transform:scale(var(--deck-scale));
+  height:var(--deck-h-active);font-size:15px;font-weight:600;
+  background:var(--accent,#1d6fdc);border-color:var(--accent,#1d6fdc);color:#fff;
+  box-shadow:0 3px 10px color-mix(in srgb,var(--accent,#1d6fdc) 30%,transparent);
+}
+body.view-novice .tabs button.on{
+  background:var(--novice,#1a8a5a);border-color:var(--novice,#1a8a5a);
+  box-shadow:0 3px 10px color-mix(in srgb,var(--novice,#1a8a5a) 30%,transparent);
+}
+/* 按压态：必须小于对应常态缩放，否则视觉上"缩回去" */
+.tabs button:active{transform:scale(.96)}
+.tabs button.on:active{transform:scale(1.16)}
+/* 悬停只对真有指针的设备生效，避免触摸端点击后残留 hover */
+@media (hover:hover){
+  .tabs button:hover{
+    border-color:var(--accent,#1d6fdc);box-shadow:0 2px 6px rgba(16,24,40,.12);
+  }
+  .tabs button.on:hover{box-shadow:0 3px 10px color-mix(in srgb,var(--accent,#1d6fdc) 30%,transparent)}
+}
+@media (hover:hover){
+  body.view-novice .tabs button:hover{border-color:var(--novice,#1a8a5a)}
+  body.view-novice .tabs button.on:hover{
+    box-shadow:0 3px 10px color-mix(in srgb,var(--novice,#1a8a5a) 30%,transparent);
+  }
+}
+/* 焦点环：outline 不改变布局尺寸 */
+.tabs button:focus-visible,.deck-arrow:focus-visible{
+  outline:2px solid var(--accent,#1d6fdc);outline-offset:2px;
+}
+body.view-novice .tabs button:focus-visible,
+body.view-novice .deck-arrow:focus-visible{outline-color:var(--novice,#1a8a5a)}
+/* 左右箭头：指针设备上的步进切换；触摸设备隐藏，改由手势切换 */
+.deck-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:2;
+  width:28px;height:28px;padding:0;border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--card,#fff);border:1px solid var(--line,#e3e6ea);
+  color:var(--accent,#1d6fdc);
+  box-shadow:0 1px 4px rgba(16,24,40,.1);
+  transition:opacity var(--motion-fast) var(--ease-standard),
+             border-color var(--motion-fast) var(--ease-standard);
+}
+body.view-novice .deck-arrow{color:var(--novice,#1a8a5a)}
+.deck-arrow svg{width:16px;height:16px}
+.deck-arrow.prev{left:8px}
+.deck-arrow.next{right:8px}
+.deck-arrow:disabled{opacity:.35;cursor:not-allowed}
+@media (hover:none){
+  .deck-arrow{display:none}
+}
+/* 位置指示器：固定居于内容区水平正中、不随切换平移 ——
+   它代表"居中槽位"，被选中的卡由轨道平移居中至该槽位，故始终正对选中卡 */
+.ind{
+  display:flex;align-items:center;justify-content:center;
+  width:100%;min-height:9px;margin:1px 0 3px;pointer-events:none;
+}
+.ind .diamond{
+  width:7px;height:7px;background:var(--accent,#1d6fdc);transform:rotate(45deg);
+}
+body.view-novice .ind .diamond{background:var(--novice,#1a8a5a)}
+/* 深色主题：强调色本身偏亮，选中卡文字改深色才看得清（对齐 .to-top 既有做法） */
+@media (prefers-color-scheme: dark){
+  .tabs button.on{color:#0d1420}
+  .tabs button{box-shadow:none}
+}
+/* 关闭动效偏好：时长归零，切换瞬时完成，功能不退化 */
+@media (prefers-reduced-motion: reduce){
+  .deck-host{--motion-fast:0ms;--motion-base:0ms}
+}
+
+/* ══ 顶栏尺寸（用户 2026-09-20 两轮调整：放大 + 报头已删） ══ */
+.topbar-in{padding:14px 18px;gap:12px}
+.brand{font-size:18px;line-height:1.4}
+.brand small{font-size:15px;font-weight:500;margin-top:4px;letter-spacing:.2px;opacity:.88}
+.switch button{font-size:14px;padding:6px 16px}
+/* 报头（.head）已由本脚本删除，标题与日期只保留在顶栏 */
+
+/* 面板显隐 */
+.panel{display:none}
+.panel.on{display:block}
+
+/* ══ 今日速览：主线框 + 跟踪信号框，两色区分 ══ */
+.brief-box{border-radius:14px;padding:15px 17px 13px;margin:0 0 18px;
+  border:1px solid;border-left-width:4px}
+.brief-main{
+  background:rgba(29,111,220,.055);
+  border-color:rgba(29,111,220,.26);
+  border-left-color:var(--accent,#1d6fdc);
+}
+body.view-novice .brief-main{
+  background:rgba(26,138,90,.07);
+  border-color:rgba(26,138,90,.28);
+  border-left-color:var(--novice,#1a8a5a);
+}
+.brief-signals{
+  background:rgba(217,119,6,.065);
+  border-color:rgba(217,119,6,.3);
+  border-left-color:#d97706;
+}
+/* 框内小标题：色块点 + 字号统一（h2 / h3 两处不同标签，视觉拉齐） */
+.brief-main > h2,
+.brief-signals .sec-h > h3{
+  display:flex;align-items:center;gap:8px;margin:0 0 11px;
+  font-size:15px;font-weight:700;line-height:1.5;
+}
+.brief-main > h2::before,
+.brief-signals .sec-h > h3::before{
+  content:"";width:7px;height:7px;border-radius:2px;flex:none;
+}
+.brief-main > h2::before{background:var(--accent,#1d6fdc)}
+body.view-novice .brief-main > h2::before{background:var(--novice,#1a8a5a)}
+.brief-signals .sec-h > h3::before{background:#d97706}
+.brief-box > :last-child{margin-bottom:0}
+@media (prefers-color-scheme: dark){
+  .brief-main{background:rgba(76,136,236,.13);border-color:rgba(76,136,236,.32)}
+  body.view-novice .brief-main{background:rgba(46,168,112,.13);border-color:rgba(46,168,112,.32)}
+  .brief-signals{background:rgba(217,140,40,.14);border-color:rgba(217,140,40,.34)}
+}
+
+/* ══ 可读性排版 ══ */
+/* 今日主线：段落之间留间距，不要糊成一整块 */
+.lead p + p{margin-top:13px}
+/* 来源行：原链接必须一眼可见（用户 2026-09-21 要求每条都附原链接） */
+.src{display:inline-block;margin-top:9px;font-size:12.5px;line-height:1.6;
+  color:var(--text-3,#6b7280)}
+.src a{
+  color:var(--accent,#1d6fdc);font-weight:600;
+  text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px;
+}
+.src a::after{content:"↗";font-size:11px;margin-left:2px;opacity:.85}
+.src a:hover{text-decoration-thickness:2px}
+body.view-novice .src a{color:var(--novice,#1a8a5a)}
+/* 跟踪信号：小标题独占一行，说明另起一行 */
+.signals ol{padding-left:22px}
+.signals li{margin-bottom:15px;line-height:1.75}
+.signals li b{display:block;margin-bottom:3px;line-height:1.6}
+
+/* ══ 页脚免责声明（用户 2026-09-21 要求，脚本统一注入） ══ */
+footer p.disclaim{
+  display:inline-block;margin:0 0 9px;padding:6px 13px;
+  border-radius:9px;font-size:13px;font-weight:600;line-height:1.5;
+  color:#b45309;background:rgba(217,119,6,.09);
+  border:1px solid rgba(217,119,6,.28);
+}
+@media (prefers-color-scheme: dark){
+  footer p.disclaim{color:#f0b357;background:rgba(217,140,40,.14);border-color:rgba(217,140,40,.34)}
+}
+
+/* ══ 返回顶部（常显、右下偏上，实心高对比） ══ */
+.to-top{
+  position:fixed;right:30px;bottom:56px;z-index:90;
+  width:46px;height:46px;border-radius:50%;cursor:pointer;padding:0;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--accent,#1d6fdc);
+  background:var(--accent,#1d6fdc);color:#fff;
+  box-shadow:0 3px 12px rgba(16,24,40,.32),
+             0 0 0 4px color-mix(in srgb, var(--accent,#1d6fdc) 16%, transparent);
+  transition:transform .15s,box-shadow .15s,background .15s,border-color .15s;
+}
+.to-top svg{stroke-width:2.6}
+body.view-novice .to-top{
+  border-color:var(--novice,#1a8a5a);background:var(--novice,#1a8a5a);
+  box-shadow:0 3px 12px rgba(16,24,40,.32),
+             0 0 0 4px color-mix(in srgb, var(--novice,#1a8a5a) 16%, transparent);
+}
+.to-top:hover,.to-top:focus-visible{
+  transform:translateY(-2px);
+  box-shadow:0 6px 18px rgba(16,24,40,.38),
+             0 0 0 5px color-mix(in srgb, var(--accent,#1d6fdc) 22%, transparent);
+}
+body.view-novice .to-top:hover,body.view-novice .to-top:focus-visible{
+  box-shadow:0 6px 18px rgba(16,24,40,.38),
+             0 0 0 5px color-mix(in srgb, var(--novice,#1a8a5a) 22%, transparent);
+}
+/* 深色主题下强调色本身偏亮，图标改用深色才看得清 */
+@media (prefers-color-scheme: dark){
+  .to-top{color:#0d1420}
+}
+@media (max-width:640px){
+  .brief-box{padding:13px 14px 11px;border-radius:12px;margin-bottom:15px}
+  .to-top{right:16px;bottom:80px;width:44px;height:44px}
+  .topbar-in{padding:11px 12px;gap:8px}
+  .brand{font-size:16px}
+  .brand small{font-size:13.5px;margin-top:3px}
+  .switch button{font-size:13px;padding:5px 13px}
+}
+/* 窄屏再收一档卡带尺寸（对应规范 420px 断点） */
+@media (max-width:420px){
+  .deck-host{--deck-w:88px;--deck-h-side:26px;--deck-h-active:33px;--deck-scale:1.18}
+  .deck-zone{padding:5px 0 3px}
+  .tabs button{font-size:12.5px}
+  .tabs button.on{font-size:14.5px}
+}
+
+/* ══ 今日主线正文加深（2026-09-22：用户反馈与面板底色对比太弱） ══
+   页面自带 .lead p{color:var(--text-2)} 用的是次级灰（浅 #4b5563 / 深 #b6bcc6），
+   压在带蓝调的 brief-main 面板底上对比度只有 ~7.7:1 / ~8.4:1，14.5px 正文读起来发虚。
+   这里改用主文字色 --text（浅 #1b1f24 / 深 #e8eaee），对比度升到 ~15:1 / ~13:1。
+   方向说明：浅色主题要「更黑」= 更深；深色主题同一个变量自动变「更白」——
+   暗底上再压更黑只会更糊，只有更亮才是提高对比，所以两档必须随主题翻转。
+   选择器 .brief-box.brief-main p 权重(0,2,1) 高于页面 .lead p(0,1,1)，
+   再加 !important 防止后续页面自带规则反压。作用域只限主线框内的段落：
+   新闻条目正文、来源行、跟踪信号框、顶栏一律不受影响。 */
+.brief-box.brief-main p{color:var(--text) !important}
+
+@media print{
+  .deck-host,.to-top{display:none !important}
+  .panel{display:block !important}
+}
+
+</style>
+<noscript><style>.panel{display:block !important}</style></noscript>
+<style>/* ARCHIVE-NAV */
+.a-nav{
+  position:fixed;left:30px;bottom:56px;z-index:90;
+  display:inline-flex;align-items:center;gap:6px;
+  padding:0 14px;height:46px;border-radius:23px;
+  font-size:13.5px;font-weight:600;text-decoration:none;
+  border:1.5px solid var(--accent,#1d6fdc);
+  background:var(--card,#fff);color:var(--accent,#1d6fdc);
+  box-shadow:0 3px 12px rgba(16,24,40,.24);
+  transition:transform .15s,box-shadow .15s,background .15s,color .15s;
+}
+.a-nav svg{width:16px;height:16px;flex:0 0 auto}
+.a-nav:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(16,24,40,.3);
+  background:var(--accent,#1d6fdc);color:#fff}
+body.view-novice .a-nav{border-color:var(--novice,#1a8a5a);color:var(--novice,#1a8a5a)}
+body.view-novice .a-nav:hover{background:var(--novice,#1a8a5a);color:#fff}
+@media (prefers-color-scheme:dark){.a-nav:hover{color:#0d1420}}
+@media (max-width:640px){.a-nav{left:16px;bottom:80px;height:44px;padding:0 12px;font-size:13px}}
+@media print{.a-nav{display:none !important}}
+</style>
+</head>
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="brand">半导体日记<small>2026-10-05 周一</small></div>
+    <div class="switch">
+      <button id="btn-expert" type="button" class="on" onclick="setView('expert')">专家版</button>
+      <button id="btn-novice" type="button" onclick="setView('novice')">小白版</button>
+    </div>
+    <!--DECK-->
+    <div class="deck-host">
+      <div class="deck-zone">
+        <button type="button" class="deck-arrow prev" id="deckPrev" aria-label="上一个栏目"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></button>
+        <div class="deck-wrap">
+          <span class="deck-fade left" id="fadeL" aria-hidden="true"></span>
+          <span class="deck-fade right" id="fadeR" aria-hidden="true"></span>
+          <div class="tabs" id="tabs" role="tablist" aria-label="栏目切换"></div>
+        </div>
+        <button type="button" class="deck-arrow next" id="deckNext" aria-label="下一个栏目"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg></button>
+      </div>
+      <div class="ind" aria-hidden="true"><span class="diamond"></span></div>
+    </div>
+    <!--/DECK-->
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="brief-box brief-main lead panel on" data-tab="brief" data-label="今日速览">
+    <h2>今日主线</h2>
+    <div class="t-expert">
+      <p>假期的第五天，涨价的「第三波」来了，但它落在了一个更钝、也更难替换的位置：<b>功率器件与模拟芯片。</b>假期前两波分别是晶圆与存储价格（台积电 2027 年起调价、内存合约价连涨）和被动元件（村田停产低毛利料号、MLCC 报价上调），而这一波的主角是安森美、德州仪器、瑞萨、Allegro 这类 IDM——<b>它们的下游是工业、汽车和电源，器件一换就要重做验证，客户几乎没有议价空间。</b>安森美 10 月 10 日生效，是它今年 4 月、7 月之后的第三轮；德州仪器 9 月 1 日启动的也是第三轮；Allegro 从 10 月起全线调价；瑞萨的新价则排在 2027 年 1 月 1 日。</p>
+      <p><b>比涨价更值得看的是「产能被谁占走」。</b>功率与模拟器件主要跑在 8 英寸成熟制程上，而 AI 服务器对电源管理芯片（PMIC）与 MOSFET 的用量成倍抬升，等于把 8 英寸产能从传统应用里抽走；过去两年行业又没有大规模扩产计划，于是器件端的涨价和晶圆代工端的涨价同时发生——本期联电已预告自 2027 年第一季起对部分制程调价 2%–5%。这与昨日台积电 2027 年第一季度对最先进晶圆再上调约 6%–8% 的消息方向一致：<b>定价权不再只停在最紧的那个节点，而是沿着整条制程谱系扩散。</b></p>
+      <p><b>而当价格解决不了问题时，行业买的是「时间」。</b>台积电把 2nm 的晶圆订单目标较原计划提高了 15%–20%，并把新竹宝山与高雄等地的 5 座 2nm 专用厂转入全面运转——量已经排到极限，客户拿不到新增配额开始另找来源，这给了三星一个窗口：第二代 2nm 工艺 SF2P 的良率目标是 70% 以上，而三星自家启动量产的 Exynos 2700 正好用的就是 SF2P，并计划把它在 Galaxy S27 里的搭载比例从 25% 提到 50%。花钱买时间这件事，在扩产端同样看得见：欣兴斥资新台币 100.89 亿元在新竹产业园区取得近 1.9 万坪土地建 AI 高阶载板厂（2029 年建厂完成、最快 2030 年开产能），崇舜以 10.6 亿元扩建 BMI 树脂厂（2029 年投产）。<b>这几笔投资的投产时间都落在 2029—2030 年，说明短缺的答案不在「多买」而在「等」。</b></p>
+      <p><b>同样的短缺也出现在最上游的一环，而且更难补。</b>空白掩膜版——光掩模版最上游、也是技术壁垒最高的一层——国产化率不足 5%，高端 EUV 与 ArF 空白掩膜版几乎 100% 依赖进口，日本 HOYA、信越化学、AGC 三家占全球九成以上份额。下游的需求却在同时变大：国内 12 英寸晶圆厂继续扩产（中芯国际临港 10 万片、京城 8–10 万片、天津 10 万片，长鑫合肥约 12 万片，长江存储武汉三期约 10 万片），制程从 28nm 往 14nm、7nm 演进又让掩膜版层数与精度要求同步上升。而 AI 需求真正被「兑现」的地方，本期落在一件不那么性感的事上：给服务器降温的冷水机组——冰轮环境数据中心冷却设备上半年订单同比增长近 500%，北美需求强劲，行业估算全球数据中心液冷渗透率已从 2023 年的 6% 提升到今年的 40% 以上。</p>
+    </div>
+    <div class="t-novice">
+      <p>假期第五天，几件事连起来是一条线：<b>涨价已经传到「不太好换」的那些芯片上了，同时所有人都在为「能不能按时拿到货」付钱。</b></p>
+      <p><b>先说涨价这一波。</b>前面两波是晶圆代工和内存涨价、以及电容电阻涨价，这一波轮到了「功率器件和模拟芯片」——你可能没听过这些名字，但它们装在你的充电器、汽车、工厂设备、服务器电源里。这一批厂商（安森美、德州仪器、瑞萨、Allegro）为什么敢涨？因为这东西<b>换起来特别麻烦</b>：客户要换一颗，得重新做测试、重新验证，成本远高于涨价本身，所以基本只能接受。安森美是 10 月 10 日开始涨，这是它今年的第三次（4 月和 7 月各一次）；德州仪器 9 月 1 日也是第三轮。</p>
+      <p><b>再说这波涨价的原因：产出被 AI 抢走了。</b>这些器件主要在 8 英寸的「老产线」上生产，而 AI 服务器要的电源芯片数量翻了好几倍，等于把老产线的产能先占掉了；偏偏过去两年大家又没怎么扩建这些产线，所以芯片变紧、涨价就传到了代工厂——台积电明年一季度要再涨 6% 到 8%，另一家代工厂联电也预告明年一季度部分制程涨 2% 到 5%。<b>订单太多、产能不够时，客户抢的就不是价格，而是「额度」</b>：台积电把 2nm 的订单目标又提高了 15% 到 20%，五座 2nm 工厂全部开满，别人想插单都插不进去。</p>
+      <p><b>最后说「买时间」这件事。</b>台湾的载板厂欣兴花了 100.89 亿新台币买地，要建 AI 芯片用的高阶载板厂，可是建厂要到 2029 年、最快 2030 年才有产能；崇舜扩建树脂厂也要到 2029 年投产。<b>这些钱的答案不是「马上多买」，而是「再等三四年」。</b>而在最上游，还有一块几乎全靠进口的「底板」——做光掩模版用的空白掩膜版，国产化率不到 5%，高端的几乎 100% 从日本进口。反过来说，AI 需求真正变成钱的地方，这一段落在了给服务器降温的冷水机组上：冰轮环境这些设备上半年的订单同比涨了近 5 倍，主要卖去北美。</p>
+    </div>
+  </div>
+
+  <section class="panel" id="L1" data-tab="L1" data-label="上游支撑">
+    <div class="sec-h"><h3>上游支撑</h3><span class="cnt">2 条（72h 内候选 3 条，达标 2 条）</span></div>
+    <div class="sec-note">EDA/IP、半导体材料、制造与封测设备</div>
+    <div class="bar"></div>
+
+    <article class="item">
+      <h4>
+        <span class="t-expert">（行业研究）空白掩膜版国产化率不足 5%、高端 EUV 与 ArF 几乎 100% 依赖进口：日本 HOYA、信越化学、AGC 占全球九成以上，国内仍处「上游有布局、整机待突破」阶段</span>
+        <span class="t-novice">光刻要用的一块「底板」，国内几乎全靠进口——国产化率不到 5%</span>
+      </h4>
+      <div class="t-expert">
+        <p>观研报告网 10 月 4 日发布《空白掩膜版行业分析：晶圆厂扩产筑基、面板产业添量 市场竞争处于空白状态》。报告称，空白掩膜版是在高纯石英基板上依次沉积铬膜（或钼硅多层膜）、抗反射层和光刻胶后形成的<b>未图形化掩模基板</b>，是光掩模版制造的核心原材料，处于光掩模版产业链最上游、技术壁垒最高的环节——它不直接参与光刻图形转移，却决定光掩模版的精度上限。需求由三重力量驱动：国内 12 英寸晶圆厂大规模扩产（报告列举中芯国际临港 10 万片、京城 8—10 万片、深圳 4 万片、天津 10 万片，华虹无锡九厂 8.3 万片，晶合集成合肥四期 5.5 万片，长鑫存储合肥约 12 万片，长江存储武汉三期约 10 万片，均为 12 英寸月产能规划）、先进制程从 28nm 向 14nm／7nm 演进带来的掩膜版层数与精度提升、以及面板产业向中国大陆集中。<b>供给端则是「高壁垒与低国产化率互为因果」：国产化率不足 5%，高端 EUV 与 ArF 空白掩膜版几乎 100% 依赖进口，日本 HOYA、信越化学、AGC 占全球 90% 以上份额。</b>国内格局分三个梯队：第一梯队菲利华、石英股份在高纯石英基板环节布局；第二梯队清溢光电、路维光电、中微掩模、无锡迪思在整机制造上处于研发或小批量验证阶段；第三梯队江丰电子、彤程新材等提供铬靶材与光刻胶配套，尚未涉及整机制造。</p>
+        <p class="impact">影响：<b>这是国产替代地图上「最上游的那一格」，也是最容易被跳过的一格。</b>产业界的讨论常聚焦在光刻机与光刻胶，但空白掩膜版的地位类似「做模具的钢材」——图形化环节（清溢光电 09-29 期已实现 55nm 相移掩膜版交货并进入客户线上认证）已经有明确突破，而它脚下的基板仍在验证早期；两条合起来才是一条完整的国产化坐标：<b>「能不能画」和「有没有底片」是两件事。</b>第二层是需求与供给的时间错配：晶圆厂扩产是 2026—2027 年的动作，而高端空白掩膜版的验证与产线建设以年为单位，这意味着即便国内企业切入，短期也难以改变进口依赖。第三层是替代的路径依赖：报告点出第一梯队是石英材料企业（菲利华、石英股份）而非掩膜版企业，说明这一环的胜负手在「基板平整度、膜层均匀性、缺陷密度」三项工艺指标，属材料能力而非电子工程能力。需要标注：本条为第三方研究机构（观研报告网）的行业分析整理，非公司公告；产能数字与梯队划分为机构口径，『几乎 100% 依赖进口』为定性表述。</p>
+      </div>
+      <div class="t-novice">
+        <p>10 月 4 日，观研报告网发布了一份关于「空白掩膜版」的行业分析。<b>空白掩膜版是做什么的？</b>芯片上的电路，是通过光刻「印」上去的；而印之前，得先有一张「底片」——专业叫光掩模版。空白掩膜版就是做这张底片用的原始材料：一块超纯的石英板上，镀上铬膜、抗反射层和光刻胶。<b>它是整条链最上游、也最难做的一环，而国内的自给率不到 5%，高端产品几乎 100% 靠进口</b>（主要来自日本的 HOYA、信越化学和 AGC，三家占全球九成以上）。为什么需求在涨？因为国内 12 英寸晶圆厂在大规模扩产——中芯国际、华虹、晶合、长鑫、长江存储都在建线，而制程从 28nm 走向 14nm、7nm，需要的掩膜版层数和精度都在增加。</p>
+        <p class="impact">跟你的关系：<b>一说半导体「卡脖子」，大家想的都是光刻机和光刻胶，但这条讲的是一张更靠前的「底片原料」。</b>打个比方：光刻胶像是「印油」，光刻机像是「印刷机」，而空白掩膜版是「刻版用的那块钢板」——没有它，前面两样都用不上。有意思的是，国内在「画图形」这一环其实已经有突破了（9 月 29 日那期讲过，清溢光电的 55nm 相移掩膜版已经交货、进了客户认证），<b>但「底片本身」还基本靠进口</b>——这两个环节常常被混为一谈，实际上差得很远。第二点：这份报告把第一梯队的公司锁定在<b>石英材料企业</b>（菲利华、石英股份），而不是掩膜版企业，说明这一环拼的是「材料功夫」（板子够不够平、镀膜够不够匀、缺陷够不够少），不是电子设计。第三点提醒：这是研究机构出的行业报告，不是公司自己的公告，里面的产能和梯队划分都是机构口径，看方向、别看细节。</p>
+      </div>
+      <span class="src">来源：观研报告网（10-04） · <a href="https://www.chinabaogao.com/market/202610/819683.html" target="_blank" rel="noopener">原文</a></span>
+    </article>
+
+    <article class="item">
+      <h4>
+        <span class="t-expert">AI 供应链扩产落到 IC 载板与上游材料：欣兴斥资新台币 100.89 亿元取得新竹产业园近 1.9 万坪土地、最快 2030 年开出 AI 高阶载板产能；崇舜以新台币 10.6 亿元扩建 BMI 树脂厂；联电拟自 2027Q1 对部分制程调价 2%–5%</span>
+        <span class="t-novice">AI 芯片要用的「托盘」和一种树脂，厂商开始花上百亿新台币买地建厂；晶圆代工也预告明年一季度涨价</span>
+      </h4>
+      <div class="t-expert">
+        <p>CMoney 投资网志 10 月 4 日报道，梳理了中国台湾半导体供应链近期的三项实体动作。其一，<b>IC 载板厂欣兴（3037）宣布斥资新台币 100.89 亿元，取得新竹产业园区近 1.9 万坪土地及建物</b>，该基地将拆除重建，预计 2029 年完成建厂，最快 2030 年正式开出 AI 高阶载板新产能。其二，上游关键材料方面，<b>特用化学品企业崇舜作为供应双马来酰亚胺（BMI）树脂关键添加剂的厂商，产品已导入高频高速铜箔基板（CCL）应用</b>，为满足供应链在地化与客户拉货动能，其斥资新台币 10.6 亿元扩建彰滨新厂，预计 2029 年投产。其三，晶圆代工端，<b>联电（2303）因应 AI 相关产品强劲产能需求，预计自 2027 年第一季起针对部分制程调涨价格，预估涨幅落在 2%–5% 区间</b>；报道同时提及投信法人于 9 月大举买超联电逾 12.1 万张、投资金额约新台币 180 亿元。</p>
+        <p class="impact">影响：<b>这条的信号在「钱花在哪一层」，而不在金额本身。</b>欣兴的扩产不是光刻层面的，而是<b>封装侧的载板</b>——AI 加速器把载板推向更大尺寸、更多层数，而载板厂的产能建设周期以年计，欣兴这座厂最快 2030 年才有产出，实际上是在用今天的资本决定 2029—2030 年的供给上限。第二层看崇舜：BMI 树脂是高频高速 CCL 的关键添加组分，材料企业扩产的投产时间同样落在 2029 年，说明这轮材料短缺并非现有产能所能补足——<b>「时间」才是这一轮供应链里最稀缺的资源</b>。第三层把联电与台积电并看：09-30 期已收录台积电自 2027 年 1 月起上调晶圆出厂价 3%—6%，本期另有韩媒报道其 2027Q1 再上调约 6%—8%（见本期 L2），联电部分制程 2%–5%，<b>先进制程与成熟制程在同一年度同时进入调价序列</b>，与本期功率／模拟器件（主要跑 8 英寸成熟制程）的第三波涨价构成同一条成本传导链。需要标注：本条为台媒投资情报站整理稿，非公司公告；金额单位为新台币，联电调价幅度为「预估」，尚未经公司确认；「9 月买超 12.1 万张」为法人筹码数据，与产业基本面无关，仅作背景。</p>
+      </div>
+      <div class="t-novice">
+        <p>10 月 4 日 CMoney 投资网志梳理了台湾半导体供应链的三件事。<b>第一件：做「托盘」的公司在买地建厂。</b>AI 芯片不能直接焊在电路板上，中间要垫一块叫「载板」的东西，做得越大、层数越多越难。载板厂欣兴花<b>100.89 亿新台币</b>在新竹产业园区买了近 1.9 万坪土地和厂房，准备拆掉重建，2029 年建完、最快 2030 年才能开始生产 AI 用的高阶载板。<b>第二件：上游一种树脂也在扩产。</b>崇舜做的是一种叫 BMI 树脂的关键添加剂，用在高速电路板材料里，它花 10.6 亿新台币扩建新厂，也是 2029 年才投产。<b>第三件：晶圆代工预告涨价。</b>联电说，因为 AI 产品的产能需求很强，预计从 2027 年第一季起对部分制程涨价，幅度大概 2% 到 5%。</p>
+        <p class="impact">跟你的关系：<b>这条最值得记的不是金额，而是「钱花在哪一层」。</b>欣兴扩的是封装用的载板，不是芯片本身；崇舜扩的是电路板里的一种树脂——都是「配套材料」。而且注意时间：<b>这两笔投资都要到 2029 年、2030 年才有产出</b>，也就是说，今天花的钱，是在决定三四年后的产能上限。第二点，把联电和台积电放在一起看就清楚了：昨天我们讲到台积电明年一季度要涨 6% 到 8%，今天联电也预告涨 2% 到 5%——<b>最先进的制程和最普通的制程，在同一年里一起涨价</b>，这在行业里并不常见，说明成本压力已经不是某一个环节的事了。第三点提醒：这是台媒的投资情报整理，不是公司公告，联电的涨幅还是「预估」，别当定论；另外新闻里提到的「法人买超 12.1 万张」是股票交易数据，跟产业本身没关系，看看就好。</p>
+      </div>
+      <span class="src">来源：CMoney 投资网志（10-04） · <a href="https://cmnews.com.tw/article/forumnews-39c428b7-bfed-11f1-a511-e5904147a6a1" target="_blank" rel="noopener">原文</a></span>
+    </article>
+  </section>
+
+  <section class="panel" id="L2" data-tab="L2" data-label="芯片制造">
+    <div class="sec-h"><h3>芯片设计与制造</h3><span class="cnt">3 条（72h 内候选 5 条，达标 3 条）</span></div>
+    <div class="sec-note">芯片设计、晶圆制造与先进封装</div>
+    <div class="bar"></div>
+
+    <article class="item">
+      <h4>
+        <span class="t-expert">台积电计划 2027Q1 对最先进晶圆出货价再上调约 6%–8%：2nm 订单目标较原计划提高 15%–20%，新竹宝山与高雄 5 座 2nm 厂转入全面运转</span>
+        <span class="t-novice">台积电明年一季度还要再涨价，幅度 6% 到 8%；2nm 订单多到要把 5 座工厂全部开满</span>
+      </h4>
+      <div class="t-expert">
+        <p>IT之家 10 月 5 日报道，援引韩媒 ddaily 10 月 2 日发布的内容：<b>在已决定上调 10%—20% 的基础上，台积电计划 2027 年第一季度针对最先进晶圆的出货价格再次上调约 6%—8%，理由是制造成本和电力费用上涨。</b>报道援引半导体业界消息称，<b>台积电 2 纳米制程订单激增，公司已将晶圆订单目标较原计划提高 15% 至 20%</b>；为应对订单增长，台积电将位于新竹宝山和高雄等地的 <b>5 座 2 纳米专用量产工厂转入全面运转状态</b>，而先进制程产能集中让部分客户难以获得新增晶圆配额。报道称，高通、AMD 等芯片设计企业面临制造成本上升与单一供应链风险，因此部分客户开始寻求台积电以外的供应来源，三星电子代工业务因此获得潜在订单机会；<b>三星正推进第二代 2 纳米制程 SF2P，目标将良率提升至 70% 以上</b>，若该制程良率稳定性获得验证，三星代工有望承接因台积电涨价和产能紧张而转移的先进制程订单。</p>
+        <p class="impact">影响：<b>这条要看的不是涨幅，而是「滚动加价」和「配额」两件事。</b>第一层，09-30 期已收录「台积电自 2027 年 1 月起上调晶圆出厂价 3%—6%」（另一媒体口径），本条为韩媒口径「先涨 10%—20%、再于 2027Q1 加 6%—8%」——<b>两套数字来自不同信源、口径不同，不宜合并计算，但方向一致：涨价不是一次到位，而是分轮次追加。</b>第二层，订单目标上调 15%—20% 与 5 座 2nm 厂满载，说明限制台积电收入的不再是需求而是产能，「拿不到配额」比「价格贵」更接近这轮的真实状况——这与存储侧的「配给制」是同一个机制，只是发生在前道。第三层是竞争结构：<b>「三星 SF2P 良率 70%」是这一轮唯一的胜负手</b>——70% 通常被视作大规模代工接单的门槛，一旦跨过，先进制程从单寡头变为双寡头，台积电的定价权才第一次遇到真正的约束，这也是为什么「客户另寻来源」与「三星有机会」被写在同一段里。需要标注：本条为韩媒报道经国内媒体编译，台积电未正式确认，订单目标与涨幅均属产业链消息；SF2P 良率为目标值而非实测值。</p>
+      </div>
+      <div class="t-novice">
+        <p>10 月 5 日 IT之家报道（引韩媒 ddaily 10 月 2 日的消息）：<b>台积电在已经决定涨价 10% 到 20% 的基础上，计划 2027 年第一季度再对最先进晶圆涨 6% 到 8%</b>，理由是制造成本和电费上涨。更值得注意的两个数字是：<b>2nm 的订单多到台积电把订单目标比原计划提高了 15% 到 20%</b>，而且它把新竹宝山、高雄等地的 <b>5 座 2nm 工厂全部转为满负荷运转</b>。结果是，一些客户想加单都加不进去；高通、AMD 这些设计公司开始寻找台积电以外的选择，三星的代工业务因此看到了机会——三星正在推进第二代 2nm 工艺 SF2P，目标是把良率提高到 70% 以上。</p>
+        <p class="impact">跟你的关系：<b>这条真正重要的是「再加价」和「拿不到量」这两件事。</b>先说明一个口径问题：9 月 30 日那期我们登过「台积电从 2027 年 1 月起涨价 3% 到 6%」，和这次的 6% 到 8% 是<b>不同媒体的不同口径，不能简单相加</b>——但方向是一致的：<b>涨价不是一次说完，而是一轮一轮往上加。</b>第二点，注意「订单目标提高 15%–20%」和「5 座 2nm 工厂全部开满」：这说明现在限制台积电的已经不是有没有人要，而是<b>它做不出来那么多</b>。这时候客户争的就不是价格，而是「额度」——和内存那边一模一样。第三点，这次的胜负手其实在三星：<b>行业里一般把 70% 良率当作能大批量接单的门槛。</b>三星要是做到了，最先进的制程就从「一家独大」变成「两家竞争」，台积电想加价就没那么容易了。提醒一句：这是韩媒消息，台积电没正式确认，良率 70% 是三星的目标，不是现在就已经达到。</p>
+      </div>
+      <span class="src">来源：IT之家（10-05） · <a href="https://www.ithome.com/1/009/740.htm" target="_blank" rel="noopener">原文</a></span>
+    </article>
+
+    <article class="item">
+      <h4>
+        <span class="t-expert">三星启动 Exynos 2700 量产：产量较上代提高约 10%，采用第二代 2nm 工艺 SF2P、性能 +12%／功耗 −25%，Galaxy S27 搭载比例拟从 25% 提升至 50%</span>
+        <span class="t-novice">三星自研的手机芯片开始量产，产量比上一代多 10%；它打算让自家芯片在新旗舰里占到一半</span>
+      </h4>
+      <div class="t-expert">
+        <p>快科技 10 月 2 日报道（据博主爆料与供应链消息）：<b>三星电子已启动 Exynos 2700 处理器量产，产量较上一代产品提高 10%</b>，该处理器将由 Galaxy S27 系列首发搭载。规格方面，Exynos 2700 采用<b>三星第二代 2 纳米工艺节点 SF2P，相比上一代性能提升 12%、功耗降低 25%</b>；封装上首发 <b>FOWLP-SbS（扇出型晶圆级并排封装）技术，在应用处理器与内存上方覆盖铜基「热路块」（Heat Path Block），实现 AP 与 DRAM 的一体化热传导</b>，散热效率高于上一代 Exynos 2600 的直接接触散热片方案。CPU 为「4+1+4+1」十核心双 Prime 集群（1×C1-Ultra 3.36GHz＋4×C1-Pro 2.88GHz；1×C2-Ultra 4.24GHz＋4×C2-Pro 3.74GHz）；GPU 为基于 AMD RDNA 5 架构的 Xclipse 970、16 个计算单元，性能预计提升 30%—40%；支持 LPDDR6 内存与 UFS 5.0 闪存。此前曝光的工程样片在 Geekbench 6.7.1 中跑出单核 4328 分、多核 14700 分。<b>三星并计划将 Exynos 在 Galaxy S27 系列中的搭载比例从 25% 提升至 50%</b>，部分市场的 S27+、S27 Pro 乃至 S27 Ultra 都可能采用该芯片，具体搭载情况视高通骁龙 8 Elite Gen6 Pro 的供货情况而定。</p>
+        <p class="impact">影响：<b>这条与上一条台积电是同一枚硬币的两面。</b>第一层，台积电 2nm 配额紧张、客户开始另寻来源的同一时间，三星自家 SoC 启动量产、且计划把自研芯片在旗舰中的占比翻倍——<b>「自研」在这里不只是省成本，更是给自家 SF2P 一个自证的舞台</b>：一颗旗舰芯片跑满一整个产品线，是良率与稳定性最直接的验证方式。第二层，这条里最前瞻的信息其实不是制程，而是<b>封装</b>：FOWLP-SbS 加铜基热路块，把 AP 与 DRAM 的散热做成一个整体，方向与 HBM 把逻辑与存储「焊在一起」一致——<b>「性能由封装定义」正在从服务器下沉到手机</b>。第三层是竞争关系的变化：计划把 Exynos 占比提到 50%，直接对手是高通，而高通旗舰恰好也依赖台积电的同一代产能——一家公司拿不到量，另一家的自研就多一分机会，这是一条完整的替代链条。需要标注：本条为博主爆料与供应链消息整理，三星未正式发布，跑分为工程样片成绩而非量产成绩，「50%」是计划值且以高通供货情况为条件。</p>
+      </div>
+      <div class="t-novice">
+        <p>10 月 2 日快科技报道：<b>三星已经开始量产自家的手机芯片 Exynos 2700，产量比上一代多了 10%</b>，会先在 Galaxy S27 系列上用。这颗芯片用三星自己的<b>第二代 2 纳米工艺（叫 SF2P）</b>，比上一代性能提升 12%、功耗降低 25%。它还首发了新的封装方式（FOWLP-SbS），简单说就是<b>在芯片和内存上面盖了一块铜做的「热路」，让两者的热量一起导出去</b>，比上一代直接贴散热片的做法更有效。此外它用的是「4+1+4+1」十核心架构、基于 AMD RDNA 5 的图形单元，支持最新的 LPDDR6 内存和 UFS 5.0 闪存。<b>最关键的一个数字是：三星打算把 Exynos 芯片在 Galaxy S27 系列里的占比，从 25% 提高到 50%。</b></p>
+        <p class="impact">跟你的关系：<b>把它和上一条台积电放一起看，就很有意思了。</b>台积电的 2 纳米产能被抢光、客户拿不到量，同一时间，三星自家芯片开始量产、还要把自家芯片的占比翻倍——<b>这不只是省钱，更重要的是给三星自己的 2 纳米工艺「一次实战证明」</b>：一颗芯片要装进上千万台手机，是最严格的良率考试。第二点，这条里最超前的其实不是「2 纳米」，而是<b>「封装」</b>：把芯片和内存的散热做成一体，这个思路和 HBM 内存「把芯片叠起来」是同一个方向——<b>以后的性能，越来越取决于「怎么把它们装在一起」，而不只是「芯片本身多强」。</b>第三点看竞争：三星要多用自己的芯片，直接挤的就是高通的份额，而高通的旗舰芯片恰好也要用台积电的产线——<b>一家拿不到量，另一家的自研就多一分机会。</b>要提醒的是：这是爆料消息，三星还没正式发布；跑分是工程样片、不是量产实测；「50%」是计划，前提是高通的供货情况。</p>
+      </div>
+      <span class="src">来源：快科技（10-02） · <a href="https://news.mydrivers.com/1/1155/1155179.htm" target="_blank" rel="noopener">原文</a></span>
+    </article>
+
+    <article class="item">
+      <h4>
+        <span class="t-expert">IBK 证券预计三星电子第三季度营业利润 101.7 万亿韩元、将首次突破单季 100 万亿韩元：DS（半导体）部门 101.8 万亿韩元，存储器供需短缺若延续盈利能力将维持高位</span>
+        <span class="t-novice">分析师预计三星这个季度赚的钱第一次超过 100 万亿韩元，靠的是内存涨价</span>
+      </h4>
+      <div class="t-expert">
+        <p>韩国《首尔经济日报》（Seoul Economic Daily）10 月 3 日报道：<b>IBK 投资证券分析师 Kim Woon-ho 于 3 日维持三星电子（005930.KS）「买入」评级与 46 万韩元目标价</b>，并预计公司 <b>第三季度营收 195.2 万亿韩元（环比增长 13.8%）、营业利润 101.7 万亿韩元（环比增长 13.6%）</b>，这将是三星<b>首次实现单季营业利润突破 100 万亿韩元</b>。分部门看：<b>DS（设备解决方案，即半导体）部门预计营收 149.9 万亿韩元、营业利润 101.8 万亿韩元</b>；显示器部门预计营收 8.8 万亿韩元、营业利润 9000 亿韩元；MX（移动体验）与网络业务预计营收 34.3 万亿韩元、营业亏损约 1.1 万亿韩元；VD（视觉显示）与家电部门预计营业亏损扩大。该分析师预计营业利润率为 52.1%、环比下降 0.1 个百分点，并将利润率变化归因于韩元兑美元汇率影响，以及第二季度未执行的绩效奖金部分在第三季度计提；他同时表示，<b>若存储器供应短缺延续，公司盈利能力将维持在当前水平</b>，并称股东回报政策（预期分红规模为存储器行业史上最高）是推动股价的积极因素。报道另提及，TrendForce 已于上月 30 日上调 2027 年 HBM 价格预测，预计 HBM 综合平均售价将同比上涨 121%。</p>
+        <p class="impact">影响：<b>这条真正该看的不是「100 万亿」这个整数关口，而是同一家公司内部两条曲线的反向。</b>DS 部门预计营业利润 101.8 万亿韩元，而手机（MX）与网络业务预计亏损约 1.1 万亿韩元——<b>卖内存的养着卖手机的</b>，这在三星历史上极为罕见，也说明这一轮存储周期的强度已经足以盖过消费电子的疲软。第二层是可验证性：这是<b>卖方预测值</b>，三星通常在 10 月上旬发布初步业绩，本预测将在数日内被真实数字检验，因此这是一条「可证伪」的短期读数，而非结论。第三层是税与汇率等非经营变量被点名：分析师明确把利润率环比微降归因于汇率与绩效奖金计提，提示「创纪录利润」中含非经营性因素，看趋势不应抠小数点。第四层是与本期存储与涨价线索的连接：TrendForce 上调 2027 年 HBM 售价至同比 +121%（09-30 期已收录同一数据），而本期台积电、联电、功率器件的涨价均指向同一件事——<b>2027 年的成本曲线已经被提前定价</b>。需要标注：本条为券商预测经韩媒报道，非公司业绩指引；部门口径为分析师拆分，与三星正式披露口径可能不同。</p>
+      </div>
+      <div class="t-novice">
+        <p>10 月 3 日，韩国《首尔经济日报》报道了 IBK 证券分析师的预测：<b>三星电子第三季度的营业利润预计达到 101.7 万亿韩元，这将是它第一次单季赚超过 100 万亿韩元</b>；营收预计 195.2 万亿韩元。拆开看更有意思：<b>半导体部门（DS）预计赚 101.8 万亿韩元，而手机和网络业务预计亏约 1.1 万亿韩元。</b>分析师说，只要内存供应紧张的局面延续，三星的赚钱能力就会维持在这个水平。报道还提到，研究机构 TrendForce 上个月底把 2027 年 HBM 内存的价格预测上调了，预计平均售价同比上涨 121%。</p>
+        <p class="impact">跟你的关系：<b>这条最值得记的不是「100 万亿」这个数字，而是三星内部「两条线反向跑」这件事。</b>半导体的利润几乎撑起了全部，手机业务反而在亏——<b>卖内存的养着卖手机</b>，这在三星历史上很少见，也说明这轮内存周期的强度，已经盖过了消费电子的疲软。这对你观察行业有个提示：<b>看一家公司，不能只看总利润，要看利润是从哪儿来的。</b>第二点，这条是可以被「打脸」的：这是分析师预测，三星一般会在 10 月上旬公布初步业绩，几天内我们就能知道准不准——所以它是个短期读数，不是结论。第三点提醒：分析师自己也说，利润里有一部分受汇率和奖金计提的影响，不是纯粹的经营改善，所以别盯着小数点看。第四点，把它和本期其他几条串起来：台积电、联电、功率器件都在涨价，加上 HBM 价格预测被上调——<b>说明 2027 年的成本，现在就已经在定价了。</b></p>
+      </div>
+      <span class="src">来源：Seoul Economic Daily（10-03） · <a href="https://en.sedaily.com/finance/2026/10/03/samsung-electronics-deeply-undervalued-ibk-says-keeping" target="_blank" rel="noopener">原文</a></span>
+    </article>
+  </section>
+
+  <section class="panel" id="L3" data-tab="L3" data-label="元器件">
+    <div class="sec-h"><h3>元器件与传感器</h3><span class="cnt">1 条（72h 内候选 2 条、达标 0 条；放宽至近 7 天后候选 4 条、达标 1 条）</span></div>
+    <div class="sec-note">被动元件、功率器件、连接器与传感器</div>
+    <div class="bar"></div>
+
+    <article class="item">
+      <h4>
+        <span class="t-expert">（行业月报）功率与模拟芯片「第三波」涨价：安森美 10 月 10 日起对大范围产品调价（此前 4 月、7 月已两轮）、Allegro 10 月起对全部产品组合调价、瑞萨新一轮调价明年生效（年内第二次）、德州仪器 9 月 1 日启动今年第三轮</span>
+        <span class="t-novice">又一轮涨价来了——这次是功率器件和模拟芯片：安森美 10 月 10 日开始，Allegro 10 月起全部产品线</span>
+      </h4>
+      <div class="t-expert">
+        <p>华强电子产业研究所 9 月 30 日发布《半导体 9 月报：模拟、功率涨价潮延续，MLCC 龙头停产部分料号并释放扩产信号》（经腾讯自选股发布），梳理国际大厂的调价节奏：<b>德州仪器于 9 月 1 日启动今年第三轮提价</b>，此前 3 月、5 月已两次调价；<b>安森美 9 月中旬向客户发布涨价函，自 10 月 10 日起对大范围产品实施调价，覆盖多品类器件</b>，此前已于 4 月和 7 月两轮涨价；<b>传感器及电源 IC 厂商 Allegro 已通知渠道及客户，自 10 月起对旗下全部产品组合调价</b>；<b>瑞萨电子宣布新一轮调价将于明年生效</b>，为其年内第二次涨价，主因原材料、能源、先进封装、制造产能及全球物流等结构性成本上涨。</p>
+        <p class="impact">影响：<b>这轮涨价的组织方式本身就是信息——四家原厂各自发函、生效时点错开排列。</b>德州仪器 9 月 1 日、Allegro 10 月、安森美 10 月 10 日、瑞萨排到明年，中间没有一家是被动跟涨，说明这是<b>成本驱动的结构性调价，而不是一次性事件</b>。第二层要说清「第三波」与前两波的区别：前两波集中在晶圆与存储价格、以及被动元件，其下游是消费电子与服务器；<b>这一波的主角是功率与模拟器件，下游是工业、汽车与电源——这类器件替换需要重新验证，客户几乎没有议价空间，涨价会直接写进整机 BOM，并最终出现在工控设备、车用零部件与电源产品的报价里。</b>第三层是物理约束在哪：这类器件大量跑在 8 英寸成熟制程上，而 AI 服务器对电源管理芯片（PMIC）与 MOSFET 的用量是成倍抬升的，等于把 8 英寸产能从传统应用里抽走；供给端过去两年又没有大规模扩产计划，于是「器件涨价」与「代工涨价」（本期联电 2027Q1 部分成熟制程调价 2%–5%）同时发生。第四层是口径纪律：本条为产业研究机构月报整理，<b>非厂商公告，四家均未公布统一涨幅与完整产品清单，实际调整幅度依个别产品而定</b>——引用时不宜把「已调价」写成某个具体百分比。</p>
+      </div>
+      <div class="t-novice">
+        <p>华强电子产业研究所 9 月底发了一份《半导体 9 月报》，把这一轮涨价的名单和时间点列清楚了：<b>德州仪器 9 月 1 日开始涨价，这是它今年的第三轮</b>（3 月和 5 月各一轮）；<b>安森美 9 月中旬发了涨价函，10 月 10 日起对大范围产品调价</b>（之前 4 月和 7 月各涨过一次）；<b>Allegro 从 10 月起把全部产品线都调价</b>；<b>瑞萨的新价格从明年起生效</b>，是它今年的第二次，原因是原材料、能源、先进封装、产能和物流这些结构性成本都在涨。</p>
+        <p class="impact">跟你的关系：<b>这条最重要的是「谁在涨、怎么涨」，而不是涨多少。</b>注意看时间：德州仪器 9 月 1 日、Allegro 10 月、安森美 10 月 10 日、瑞萨排到明年——<b>每一家都是自己发通知、时间错开，没有一家是被动跟风</b>，这说明是成本推动的、结构性的涨价，不是一次性的。第二点，这一波和前两波不一样在哪？前面是晶圆代工、内存和电容电阻涨价，主要影响手机和服务器；<b>这一波是「功率器件和模拟芯片」，装在充电器、汽车、工厂设备和服务器电源里——这些东西换起来特别麻烦，一旦涨价，客户基本只能接受，成本最后会一层层传到整机报价上。</b>第三，为什么突然这么紧？因为这些器件大多在 8 英寸的「老产线」上做，而 AI 服务器把电源芯片的需求拉了好几倍，等于把老产线的产能先占走了；偏偏过去两年没人扩建这些产线。所以你会看到：器件在涨，代工也在涨（联电明年一季度也要涨 2% 到 5%）。最后提醒：这是行业月报的整理，不是厂商公告，这几家都没公布统一的涨幅和完整名单，实际涨多少要看具体型号。</p>
+      </div>
+      <span class="src">来源：华强电子产业研究所《半导体9月报》（腾讯自选股 09-30 发布，天眼查企业头条转载） · <a href="https://news.tianyancha.com/ll_d199civiwn.html" target="_blank" rel="noopener">原文</a></span>
+    </article>
+  </section>
+  <section class="panel" id="L4" data-tab="L4" data-label="终端应用">
+    <div class="sec-h"><h3>终端与应用</h3><span class="cnt">4 条（72h 内候选 4 条，达标 4 条）</span></div>
+    <div class="sec-note">终端需求、智驾落地、算力基建与可穿戴产品</div>
+    <div class="bar"></div>
+
+    <article class="item">
+      <h4>
+        <span class="t-expert">特斯拉三季度交付 486,532 辆、环比增约 1.3%、同比降约 2.1%：Model 3／Y 合计 478,237 辆占 98.3%，储能装机 13.7GWh、同比增 9.6%，较 Visible Alpha 预期 456,896 辆高出约 6.5%</span>
+        <span class="t-novice">特斯拉三季度交了 48.65 万辆车，比市场预期多 6.5%，但比去年同期少了一点</span>
+      </h4>
+      <div class="t-expert">
+        <p>凤凰网科技 10 月 3 日报道：特斯拉于北京时间 10 月 2 日发布 2026 年第三季度全球生产与交付报告。本季度<b>全球交付汽车 486,532 辆、环比增长约 1.3%；生产汽车 464,391 辆、环比增长约 2.8%</b>；同期<b>储能产品装机量 13.7 吉瓦时、同比增长约 9.6%、环比增长约 1.5%</b>。车型结构上，<b>Model 3 与 Model Y 合计交付 478,237 辆，占总交付量约 98.3%</b>，其他车型合计 8,295 辆。交付量高于市场预期——据路透社报道，Visible Alpha 汇总的分析师平均预期为 <b>456,896 辆</b>，实际交付量较预期高出约 6.5%；<b>但与去年同期 497,099 辆相比仍下降约 2.1%</b>。公司计划于美国当地时间 10 月 21 日盘后公布第三季度财报。同期特斯拉中国宣布 10 月 1 日 Model 3 全系更新（中央触摸屏升级至 16 英寸、提供浅灰色内饰选装），并称 Cybercab 已于 9 月加入奥斯汀现有 Robotaxi 服务、全国巡展自 9 月 17 日在北京上海启动。</p>
+        <p class="impact">影响：<b>「超预期、环比微增、同比微降」三个方向同时出现，说明需求已经进入平台期，而不是处在增长曲线上。</b>市场此前按 456,896 辆定价，实际多出约 6.5%，所以短期情绪面是正的；但同比仍少约 1.1 万辆、下降约 2.1%，意味着增长故事已经不能由整车交付单独承担。第二层是结构风险：<b>98.3% 的交付集中在 Model 3 与 Model Y 两款车上</b>，任何一次改款节奏、关税或零部件扰动都会被直接放大到总交付上；这也解释了为什么特斯拉在配置更新（屏幕、内饰、外供电）上动作频繁——它没有新的大众市场车型来接棒，只能靠改款维持热度。第三层是与本期链条的衔接：10-04 期已收录特斯拉为保 Optimus 量产把自研 AI5 的内存由 144GB 减半至 72GB，本条则显示整车交付同比微降——<b>一边是卖车增长停滞，一边是自研算力与机器人继续加码，说明公司正在把资本开支的重心从「卖更多车」转向「造自己的算力」</b>，这正是车规与存储芯片需求的来源端，也是为什么在整车数据平淡的情况下，它对上游元件的议价仍然被动。第四层是口径边界：交付量与储能装机量只是两项经营指标，季度财务表现还取决于平均售价、销售成本与汇率变动，<b>交付超预期不等于利润超预期</b>，需等 10 月 21 日财报确认。</p>
+      </div>
+      <div class="t-novice">
+        <p>10 月 3 日凤凰网科技报道：<b>特斯拉三季度在全球交了 486,532 辆车</b>，比上季度多约 1.3%；造了 464,391 辆；储能产品装机 13.7 吉瓦时（同比涨约 9.6%）。卖出去的车里，<b>Model 3 和 Model Y 加起来 478,237 辆，占了 98.3%</b>。这个数字比市场预期好——分析师原本平均只预期 456,896 辆，<b>实际多了约 6.5%</b>；但和去年同期的 497,099 辆比，<b>还是少了约 2.1%</b>。</p>
+        <p class="impact">跟你的关系：<b>一句话总结——交得比大家想的多，但比去年少。</b>这三个方向要一起看：「超预期」说明短期情绪是好的，「环比微增」说明没崩，「同比微降」说明增长停住了。第二点看结构：<b>98.3% 都是那两款车</b>，等于全公司靠 Model 3 和 Model Y 撑着，这也解释了为什么它老在改配置（这次把中控屏升到 16 英寸）——没有新车型接力，只能靠改款保鲜。第三点把它和 10 月 4 日那期联系起来：那期讲特斯拉为了让机器人顺利量产，主动把自家 AI5 芯片的内存砍了一半。**一边是车卖得平，一边还在砸钱搞自研芯片和机器人**——所以它买芯片、买内存的力度，不会因为车卖得平就停下来；反过来，在缺货的时候，它比谁都更没有议价权。最后提醒：交付量不等于赚钱，售价、成本和汇率都会影响利润，真正见分晓要等 10 月 21 日的财报。</p>
+      </div>
+      <span class="src">来源：凤凰网科技（腾讯新闻载，10-03） · <a href="https://news.qq.com/rain/a/20261003A02GAS00" target="_blank" rel="noopener">原文</a></span>
+    </article>
+
+    <article class="item">
+      <h4>
+        <span class="t-expert">国产智驾芯片进入「一哥」之争：比亚迪 4nm 璇玑 A3 已规模化量产、配套 4D 毫米波雷达芯片完成联调；2026Q2 地平线在 L2+ 市场以 32% 反超英伟达 28%，但城区 NOA 仍是英伟达 39.43% 对地平线 22.82%</span>
+        <span class="t-novice">国产智驾芯片开始抢份额：比亚迪自研 4nm 芯片量产，地平线在部分市场已经超过英伟达</span>
+      </h4>
+      <div class="t-expert">
+        <p>芯师爷 10 月 5 日刊出的行业梳理称：<b>比亚迪自研的璇玑 A3 已开启规模化量产</b>（该芯片 5 月底发布，4nm 车规级，16 核 CPU 架构、DMIPS 达 420K、DDR 带宽 273GB/s、单颗算力 700TOPS，原生支持 Transformer 大模型，三颗组合整车算力可超 2100TOPS；公司称已通过汽车功能安全最高等级认证，单位算力功耗比同级产品低 20%）。不过<b>芯片装车还需经过验证、适配等环节，具体装车时间与配套车型尚未公开</b>。与此同时，<b>比亚迪半导体宣布一款以璇玑 A3 为算力中心的新一代 4D 毫米波雷达芯片已经量产，并完成与璇玑 A3 的联调适配</b>，围绕璇玑 A3 的智驾方案正逐步成形。地平线方面：<b>2026Q2 在 L2+ 市场份额达 32%、英伟达为 28%</b>；<b>2026H1 城区 NOA 市场地平线份额 22.82%（同比提升近 5 个百分点），英伟达以 39.43% 排名第一、但较 2025 年底已下降近 10 个百分点</b>；地平线已跨过 1500 万套出货量、手握超 2000 万套定点。其星空 6P（5nm、算力 650TOPS、内存带宽 273GB/s）获博泰车联定点，成为首个纯国产舱驾一体芯片的高端 AI 座舱定点项目，<b>单车综合成本降低 1500—4000 元、研发交付周期从 18 个月缩短至 8 个月、整车空间占用缩小 50%</b>。文中另列爱芯元智 M9 系列（5nm，M97 720TOPS／M95 360TOPS）与黑芝麻 A2000X（最高 1000TOPS；公司上半年营收 4.58 亿元、同比增 81.3%，毛利率由 24.8% 提升至 49.5%，芯片出货超 600 万颗）。</p>
+        <p class="impact">影响：<b>竞争维度已经从「比 TOPS」转向「车载平台能不能长期承载大模型」——本期三家不约而同把内存带宽写成 273GB/s、460GB/s 这类数字，就是方向切换的证据。</b>过去宣传口径是峰值算力，现在拼的是内存带宽、量化精度（FP4／INT8／FP8）、数据搬运效率、工具链成熟度与安全隔离能力，因为这些才决定端到端大模型在车端能不能稳定跑起来。第二层是<b>份额数字的口径分层</b>，这是本条最需要警惕的地方：在 L2+ 市场地平线已反超英伟达（32% 对 28%），但在更高阶的城区 NOA 市场英伟达仍是第一（39.43% 对 22.82%）。<b>同一时期、两个市场，结论相反</b>——引用时必须写明是哪一层口径，否则会得出「国产已全面领先」的错误判断。第三层是自研与第三方的共存：比亚迪自研 4nm 量产，同期黑芝麻上半年营收同比增 81.3%、毛利率从 24.8% 提到 49.5%、出货超 600 万颗，说明车企自研并未把第三方挤出场，反而把整个市场的芯片用量做大了——<b>这对上游是纯增量：每多一颗车规 SoC，就要多配 DDR、电源管理、雷达收发前端与连接器。</b>第四层是事实边界：璇玑 A3「已开启规模化量产」来自公司在互动平台的答复，<b>装车时间、配套车型均未公开</b>，「首款搭载车型可能来自腾势」属传闻，须以官方为准；爱芯元智、黑芝麻的数据为厂商发布与自家财报口径。</p>
+      </div>
+      <div class="t-novice">
+        <p>10 月 5 日芯师爷发了一篇梳理，讲国产智驾芯片现在有多挤。重点有几块：<b>比亚迪自研的璇玑 A3 芯片已经开始规模化量产</b>——这是颗 4nm 的车规芯片，5 月底发布，16 核 CPU，单颗算力 700TOPS，三颗一起用能超过 2100TOPS。但要注意：<b>量产不等于装车，还要过验证和适配，官方没说装到哪些车型、什么时候装。</b>另外<b>比亚迪半导体还宣布，一款以璇玑 A3 为核心的 4D 毫米波雷达芯片已经量产</b>，并且和璇玑 A3 联调好了，等于智驾方案的两块拼图凑上了。地平线这边：<b>今年二季度在 L2+ 市场占 32%，超过了英伟达的 28%</b>；但在城区 NOA 这个更高阶的市场，<b>地平线是 22.82%，英伟达还是第一、占 39.43%</b>（不过比去年底降了近 10 个百分点）。</p>
+        <p class="impact">跟你的关系：<b>先说一个容易踩的坑——听到「国产超过英伟达」，一定要追问一句「是哪个市场」。</b>这篇文章里就有两个相反的数字：<b>L2+ 市场地平线已经反超（32% 对 28%），但在城区 NOA 市场英伟达还是第一（39.43% 对 22.82%）</b>。同一个时期、两个口径，结论完全相反。第二点看打法的变化：以前国产芯片都在比「算力多大」，现在开始比「内存带宽多大」。为什么？<b>因为要跑大模型，光有算力不够，数据搬不动就是白搭——这跟电脑里 CPU 再快、内存不够也卡是一个道理。</b>第三点，对你做元器件销售最有参考价值的是这句：<b>国产智驾芯片起来不等于上游生意被抢走，反而是增量</b>——每多一颗车规芯片，就要多配内存、电源管理芯片、雷达前端和连接器；而且黑芝麻上半年营收涨了 81%、毛利率从 24.8% 提到 49.5%、出货超 600 万颗，说明车企自研并没有把专业芯片公司挤死。最后提醒：这些规格和份额都是厂商发布和研究机构口径，「量产」之后真正上车还要等官方消息。</p>
+      </div>
+      <span class="src">来源：芯师爷（腾讯新闻载，10-05） · <a href="https://news.qq.com/rain/a/20261005A000JS00" target="_blank" rel="noopener">原文</a></span>
+    </article>
+
+    <article class="item">
+      <h4>
+        <span class="t-expert">AI 算力降温需求外溢：冰轮环境上半年数据中心冷却设备订单同比增近 500%、北美需求强劲，全球数据中心液冷渗透率由 2023 年 6% 升至今年 40% 以上；特锐德 400 千伏预制舱 24 模块、100 小时完成安装</span>
+        <span class="t-novice">AI 数据中心太热了——给它「降温」的公司，上半年订单涨了近 5 倍</span>
+      </h4>
+      <div class="t-expert">
+        <p>齐鲁网·闪电新闻 10 月 4 日报道：烟台<b>冰轮环境的数据中心冷却设备陆续下线，目的地是北美数据中心</b>。公司执行总裁舒建国表示，<b>今年上半年数据中心冷却设备订单同比增长近 500%，下半年依然保持大幅增长态势，北美市场需求强劲</b>。为满足快速交付、现场调试与敏捷响应的售后要求，企业搭建了<b>「烟台总部＋马来西亚＋北美」三地协同产能体系</b>——中国承担核心制造与研发、马来西亚辐射东南亚并直供北美、美国采用原有工厂加租赁厂房模式快速落地组装。报道并引行业估算：<b>全球数据中心液冷渗透率从 2023 年的 6% 提升至今年 40% 以上</b>，原因是 AI 机柜算力密度持续走高、传统风冷散热已达到物理极限。同篇报道另披露：青岛特锐德正为海外客户赶制<b>全球最高电压等级 400 千伏预制舱式产品，整套设备分 24 个模块、可在 100 小时内完全实现安装；与以往土建变电站相比，建设周期缩短近 60%、综合成本节约 10%、占地面积减少 50%</b>，产品已推广至全球约 60 多个国家和地区。山东省层面，<b>今年前 8 个月电工器材出口 365.9 亿元、同比增长 6.7%（其中变电站、变压器产品出口值超 90 亿元）；计算机及其零部件出口增长 30.4%、达 192.2 亿元</b>，液冷机柜、高速传输线缆等相关产品也实现大幅增长。</p>
+        <p class="impact">影响：<b>液冷渗透率从 6% 到 40% 以上，是「物理约束驱动的替换」，不是偏好变化。</b>单机柜功率密度上到风冷无法覆盖的量级后，散热从「可选的优化项」变成「不选就跑不起来」的前提条件，这类需求的确定性远高于靠补贴或流行趋势驱动的品类——这也是为什么在整条产业链都在涨价、扩产、排队的时候，散热环节的订单可以直接跳增。第二层是<b>订单增速必须与产能布局一起读</b>：三地协同（烟台＋马来西亚＋北美）说明企业判断的瓶颈已经不在技术而在交付与售后，把工厂放到客户家门口既是为就近供货，也是应对贸易与关税不确定性的常规动作。把它与本期 IC 载板扩产（2029 年动工、2030 年贡献产能）放在一起看会得到一个重要对比：<b>终端基建的落地节奏（上半年订单、100 小时装机）比上游材料与载板扩产的节奏（三到四年后）快了一个数量级</b>，这意味着未来两年「缺元件」的压力会一直存在，而「缺基建」的压力已经被大量缓解。第三层是口径纪律：<b>「近 500%」是订单增速而非订单金额，公司未披露绝对金额与在手订单规模；液冷渗透率 40% 以上为报道所称「行业估算」，非权威统计口径；山东出口数据为省级海关口径，不能外推至全国</b>，且电工器材出口增速 6.7% 与计算机零部件 30.4% 属于两个不同结构，不宜混为一谈。第四层是产业链外溢方向：这条线上被拉动的不是单一品类——冷水机组（压缩机、换热器、泵阀）、高速传输线缆、以及配套的变压器与预制舱式变电站同时放量，<b>AI 的「隐形需求」正在从芯片扩散到电力与散热，这恰恰是元器件与设备分销最容易切入的方向</b>。</p>
+      </div>
+      <div class="t-novice">
+        <p>10 月 4 日齐鲁网·闪电新闻报道：山东烟台做「算力制冷装备」的<b>冰轮环境，一批批冷却设备正在下线，发往北美数据中心</b>。公司说，<b>今年上半年数据中心冷却设备订单同比增长近 500%，下半年还在大幅增长，北美需求最猛</b>。为了能快速交付和就近服务，它在<b>烟台、马来西亚、美国三地都布了产能</b>。报道还给了一个关键数字：<b>全球数据中心的液冷渗透率，从 2023 年的 6% 涨到了今年的 40% 以上</b>——因为 AI 机柜太费电、太热，老式风冷已经到极限了。另外，青岛特锐德在做 400 千伏的预制舱式变电站，分成 24 个模块、100 小时就能装完，比传统土建变电站工期缩短近 60%、成本省 10%、占地少一半。山东前 8 个月电工器材出口 365.9 亿元、涨 6.7%，计算机及其零部件出口涨 30.4%、达 192.2 亿元。</p>
+        <p class="impact">跟你的关系：<b>这条是整期里「需求最实在」的一类——不是涨价，是东西不够用。</b>液冷的比例从 6% 涨到 40% 以上，本质是物理问题：机柜越来越热，风冷吹不动了，不上液冷机器就跑不起来，所以这不是「可选升级」，是「必须换」。第二点，注意「订单涨 5 倍」要和「它把工厂开到马来西亚和美国」一起看——<b>说明现在比的不是技术，是谁能更快交货、更快上门修</b>；这也是中国装备出海的标准打法：产地靠近客户，规避关税和运输风险。第三点，把它和本期「IC 载板要等到 2029 年才建厂」对比一下，你会发现一个很不对称的现象：<b>散热和电力这种「基建」，半年就能落地；芯片材料这种「上游」，要等三四年。所以未来两年，卡脖子的会一直是元件和材料那一头。</b>顺便留意这条线上被带动的品类：冷水机组（压缩机、换热器、泵阀）、高速线缆、变压器和预制舱变电站都在放量——这对做元器件和设备分销的人是直接可切入的方向。最后提醒口径：涨 5 倍是<b>订单增速，不是金额</b>；40% 是报道引用的「行业估算」，不是官方统计；出口数据是山东省口径，别当成全国。</p>
+      </div>
+      <span class="src">来源：齐鲁网·闪电新闻（10-04） · <a href="https://sdxw.iqilu.com/w/article/YS0yMS0xNzQyODEyNw.html" target="_blank" rel="noopener">原文</a></span>
+    </article>
+
+    <article class="item">
+      <h4>
+        <span class="t-expert">三星与谷歌合作智能眼镜通过 FCC 认证：SM-O200P／SM-O200J 两型号分别对应 Warby Parker 与 Gentle Monster 镜框，搭载骁龙 AR1 Gen 1 与 Android XR，2026 年秋季发布窗口</span>
+        <span class="t-novice">三星要和谷歌一起发智能眼镜了，联名两个眼镜品牌，走 Meta 那条路</span>
+      </h4>
+      <div class="t-expert">
+        <p>映维网 10 月 2 日报道（经同花顺 10 月 3 日转载）：<b>FCC 备案文件中出现 SM-O200P 与 SM-O200J 两个型号，分别对应 Warby Parker 和 Gentle Monster 的镜框</b>——美国品牌 Warby Parker 有三种镜框款式、韩国品牌 Gentle Monster 目前有两种。<b>这批即将推出的智能眼镜由三星与谷歌合作打造，将成为首批搭载谷歌 Android XR 操作系统的产品</b>；与 Meta 的智能眼镜系列颇为相似，两款镜框将内置摄像头、麦克风和耳外扬声器，可用于接听电话、收听播客，以及与 Google Gemini 互动。据称该批产品将搭载<b>高通骁龙 AR1 Gen 1 芯片组、配备一颗 1200 万像素前置摄像头和 LED 指示灯，单次充电最长可使用 9 小时，并配有便携充电盒</b>。报道指出，除「2026 年秋季」这一发布窗口外，尚未公布价格或上市日期。文中同时提到，三星此举是尝试挑战 Meta 迅速壮大的智能眼镜阵容（含雷朋、欧克利与 Meta 自有品牌产品，以及 Meta Ray-Ban Display 眼镜和取消摄像头的纯音频眼镜），但 Meta 领先多年、优势难以撼动；并提示美国已有多个州和城市采取行动，禁止在政府公共建筑内使用这类设备。</p>
+        <p class="impact">影响：<b>可穿戴正在成为「端侧 AI 的第一个大众化载体」，而它的技术约束与手机完全不同。</b>眼镜必须常开、必须轻、必须一天不用充电，因此对 SoC 的能效比、传感器功耗与电池密度提出的是智能手机之外的另一套要求；本次采用<b>高通骁龙 AR1 Gen 1 这类专用低功耗平台而非通用手机芯片</b>，本身就说明这条赛道已经分化出自己的芯片需求——对上游而言，这意味着一批新的低功耗 SoC、微型摄像头模组、MEMS 麦克风与微型电池的增量，而不是手机料的简单转移。第二层是<b>生态归属比硬件参数更值得关注</b>：Android XR 由谷歌主导，三星是首个落地硬件的伙伴，这套「操作系统＋时尚品牌渠道」的组合与 Meta（Ray-Ban／依视路陆逊梯卡）几乎一一对应——智能眼镜的胜负手正在从「谁能做出眼镜」转为「谁能让开发者愿意为它写应用」，因为只有应用生态才能决定「戴着它干什么」。第三层是必须标注的监管变量：<b>美国多个州与城市已限制在政府公共建筑内使用带摄像头的智能眼镜</b>，隐私监管是这个品类特有的、可能实质压低渗透率的风险，评估出货预期时不能只看硬件规格。第四层是事实边界：<b>FCC 认证只证明设备符合无线电相关合规要求</b>，「骁龙 AR1 Gen 1」「1200 万像素」「9 小时续航」均为媒体报道的供应链信息而非官方规格表，「2026 年秋季」也未给出确切日期与定价。</p>
+      </div>
+      <div class="t-novice">
+        <p>映维网 10 月 2 日报道：三星的智能眼镜出现在美国 FCC（管无线电设备的机构）的备案文件里，<b>型号是 SM-O200P 和 SM-O200J，分别对应 Warby Parker 和 Gentle Monster 两个品牌的镜框</b>——前者有 3 种款式，后者目前 2 种。这批眼镜<b>是三星和谷歌合作做的，会是第一批搭载谷歌 Android XR 系统的产品</b>。功能上跟 Meta 的智能眼镜很像：镜框里装了摄像头、麦克风和耳外扬声器，能接电话、听播客，还能跟谷歌的 Gemini 对话。规格方面据说是<b>高通的骁龙 AR1 Gen 1 芯片、1200 万像素前置摄像头、续航最长 9 小时、带一个充电盒</b>。目前只知道是「2026 年秋季」发布，价格和具体日期都没公布。</p>
+        <p class="impact">跟你的关系：<b>眼镜很可能是「端侧 AI」第一个真正被普通人用起来的样子，但它对面的技术要求和手机完全不是一回事。</b>手机可以一天一充，眼镜不行；手机可以厚一点，眼镜不行。所以它必须用小、省电、专门为 AR 设计的芯片（比如这次的高通 AR1 Gen 1），而不是把手机芯片塞进去——<b>这就意味着一条新的、独立于手机的元件需求：低功耗芯片、微型摄像头、麦克风、微型电池。</b>第二点，比参数更重要的是「归谁管」：这次系统是谷歌的、硬件是三星的、渠道是眼镜品牌（Warby Parker、Gentle Monster）的——<b>这跟 Meta 拉着雷朋合作的路子一模一样</b>。眼镜能不能火，最后看的是有没有人愿意为它写应用，而不只是硬件好不好看。第三点，有个容易被忽略的风险：<b>美国已经有好几个州和城市禁止在政府大楼里戴这种带摄像头的眼镜。</b>隐私监管是这个品类独有的变量，评估它能不能卖起来时不能只看规格。最后提醒：FCC 备案只说明无线电合规，那些参数都是供应链消息，不是官方规格表，价格和日期都还没有。</p>
+      </div>
+      <span class="src">来源：映维网（10-02 报道，经同花顺转载） · <a href="https://m.10jqka.com.cn/20261003/c680437105.shtml" target="_blank" rel="noopener">原文</a></span>
+    </article>
+  </section>
+
+  <section class="brief-box brief-signals panel" id="signals" data-tab="brief" data-label="今日速览">
+    <div class="signals">
+      <h3>跟踪信号</h3>
+      <div class="t-expert">
+        <ol>
+          <li><b>判断这一轮涨价是不是「结构性的」，要看谁发函、什么时候生效，而不是看涨幅百分比。</b>本期四家原厂各自发函、生效时点错开：德州仪器 9 月 1 日（年内第三轮）、Allegro 10 月起全线、安森美 10 月 10 日、瑞萨的新价格排到明年生效（年内第二次）——没有一家是被动跟涨；叠加联电 2027Q1 对部分成熟制程调价 2%–5%，「器件涨价」与「代工涨价」同向出现。要跟踪三件事：功率与模拟器件的交期能否回落、厂商是否公布统一涨幅与完整调价清单、以及工控与车用客户的替换验证周期是否被拉长。<b>如果验证周期变慢，"成本传导"就会变成"供给锁定"，涨价持续的时间会长于市场预期。</b></li>
+          <li><b>供给端的增量被推到了 2029—2030 年，未来两三年只能靠价格与配额调节。</b>本期 IC 载板扩产是最清楚的样本：欣兴董事会通过 100.89 亿元新台币资本预算、规划 1.9 万坪新厂，2029 年动工、2030 年贡献产能；崇舜投资 10.6 亿元新台币，2029 年投产。要跟踪三点：这些项目的开工与土建节点能否按计划推进、BT 载板与高阶 ABF 载板的交期是否继续拉长、以及 2027 年是否出现第二轮追加投资。<b>资本开支只落在"远期"，说明厂商自己判断缺口是结构性的；反过来，这也意味着 2027—2028 年的供给弹性极小，价格下不来。</b></li>
+          <li><b>上游材料的国产化率是最硬的「卡点读数」，本期最紧的一处是空白掩膜版。</b>观研报告网本期研究显示：空白掩膜版国产化率不足 5%，EUV 与 ArF 用空白掩膜版几乎 100% 依赖进口，HOYA、信越、AGC 三家合计占全球 90% 以上，行业呈三梯队格局。要跟踪三点：是否有国内厂商公布掩膜版产线的环评、设备订单或客户验证进展；三家日企的产能与报价是否出现调整；以及国内 28nm 及以上成熟制程扩产对空白掩膜版需求的实际拉动。<b>这类材料的替代周期以年计；它一旦被限制，受影响的是整个成熟制程产能，而不是某一家厂——这是与器件涨价性质完全不同的风险。</b></li>
+          <li><b>在「涨价」这一侧之外，真正在长大的需求只有少数几条，本期出现了两个：液冷与智驾芯片。</b>液冷——全球数据中心渗透率从 2023 年 6% 升至今年 40% 以上，冰轮环境上半年相关订单同比增近 500%、北美需求强劲，并搭起「烟台＋马来西亚＋北美」三地产能体系；智驾芯片——比亚迪 4nm 璇玑 A3 已规模化量产、配套 4D 毫米波雷达芯片完成联调，2026Q2 地平线在 L2+ 市场以 32% 反超英伟达 28%。要跟踪三点：液冷订单能否在后续财报中转化为收入确认、国产智驾芯片的实际装车时间表（<b>量产不等于上车</b>）、以及内存涨价向手机与汽车传导后是否开始压制整机销量。<b>如果终销量被压住，涨价链条的上半段还能走，下半段就会断——这是判断这轮行情能持续多久的关键分界。</b></li>
+        </ol>
+      </div>
+      <div class="t-novice">
+        <ol>
+          <li><b>要判断涨价是不是「动真格的」，看两件事就够了：谁发的通知、什么时候生效。</b>德州仪器 9 月 1 日（今年第三轮）、Allegro 10 月起全线上调、安森美 10 月 10 日、瑞萨排到明年生效——<b>四家都是自己发函、时间错开，没有一家是跟着别人涨</b>，这就是成本推动的、结构性的涨价。要盯三件事：这些芯片的交期会不会松动、厂商会不会公布统一的涨价清单、以及客户换料要重新验证多久。<b>最后一件事最关键——如果客户发现换一颗芯片要重新验证半年，那涨价就不是"过一阵就好"，而是会拖很久。</b></li>
+          <li><b>这轮缺货的「解药」，被排到了 2029 年才吃得上。</b>看 IC 载板（可以理解成芯片的「底座」）最清楚：欣兴拿 100.89 亿新台币要建 1.9 万坪新厂，<b>2029 年才动工、2030 年才出货</b>；崇舜投 10.6 亿新台币，也是 2029 年才投产。<b>这说明厂商自己就判断：这不是短期紧、是结构性缺。</b>要盯三件事：这些厂能不能按计划开工、载板交期还会不会继续拉长、以及明年有没有人追加投资。<b>推论很直白：既然新产能三年后才来，这两年的价格就只能由"谁手里有货"来定。</b></li>
+          <li><b>想知道「卡脖子」卡在哪，最直接的办法是看国产化率——数字越低，越是真瓶颈。</b>本期一份研究指出：做芯片必须用的<b>「空白掩膜版」，国产化率不到 5%</b>；最先进的两类（EUV、ArF）几乎 100% 靠进口；全球 90% 以上被日本三家公司（HOYA、信越、AGC）拿走。<b>注意：这不是只卡"最先进"，成熟制程一样要用，所以影响面比想象中宽。</b>要盯三件事：有没有国内厂公布建线、买设备或送客户验证的消息；这三家日企会不会调价或限供；以及国内扩产的成熟制程产线会不会把需求拉起来。<b>一句实话：材料这一关是按年计的，短期看不到变化才是正常的——但它一旦出问题，倒的不是一家厂，是一大片成熟制程产能。</b></li>
+          <li><b>涨价这条线之外，真正在「自己长大」的需求，本期能看到两个：给算力降温的液冷，和装在车上的智驾芯片。</b>液冷这边：全球数据中心液冷比例从 2023 年 6% 涨到今年 40% 以上，冰轮环境这类订单上半年涨了近 5 倍，还专门在马来西亚和美国布产能就为了就近供货。智驾芯片这边：比亚迪自研 4nm 芯片开始量产、配套的毫米波雷达芯片也量产了；地平线在 L2+ 市场以 32% 超过了英伟达的 28%。<b>要盯三件事：一是液冷的订单能不能真变成收入；二是国产芯片"量产"之后什么时候真的上车——这两件事不是一回事；三是内存涨价传到手机和汽车以后，会不会让销量变差。</b>如果销量被压住，涨价传到一半就断了——<b>这是判断这轮行情能走多久的分界线。</b></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  var VKEY = 'zaobao-view', TKEY = 'zaobao-tab';
+  var GAP = 8;              /* 卡间距，必须与 CSS 里 .tabs{gap:8px} 一致 */
+  var SWIPE_X = 48;         /* 横向手势判定阈值 px */
+  var SWIPE_DIR_LOCK = 12;  /* 主方向锁定阈值 px */
+
+  function setView(v) {
+    document.body.className = 'view-' + v;
+    var e = document.getElementById('btn-expert') || document.getElementById('be');
+    var n = document.getElementById('btn-novice') || document.getElementById('bn');
+    if (e) e.classList.toggle('on', v === 'expert');
+    if (n) n.classList.toggle('on', v === 'novice');
+    try { localStorage.setItem(VKEY, v); } catch (err) {}
+  }
+  window.setView = setView;
+
+  var panels = [].slice.call(document.querySelectorAll('.panel'));
+  var track = document.getElementById('tabs');
+  var wrapEl = document.querySelector('.deck-wrap');
+  var fadeL = document.getElementById('fadeL');
+  var fadeR = document.getElementById('fadeR');
+  var btnPrev = document.getElementById('deckPrev');
+  var btnNext = document.getElementById('deckNext');
+  var cards = [];
+  var curTab = null;
+
+  /* 按面板的 data-label 生成栏目卡。一个栏目可能由多个面板拼成
+     （今日速览 = 主线 + 信号），同名只生成一张卡。 */
+  if (track) {
+    var seen = {};
+    panels.forEach(function (p) {
+      var t = p.getAttribute('data-tab');
+      if (seen[t]) { return; }
+      seen[t] = 1;
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = p.getAttribute('data-label') || t;
+      b.setAttribute('data-tab', t);
+      b.setAttribute('role', 'tab');
+      b.setAttribute('aria-selected', 'false');
+      b.addEventListener('click', function () {
+        if (b.getAttribute('data-tab') === curTab) { return; }  /* 已选中：不变更、不动画 */
+        showTab(b.getAttribute('data-tab'));
+      });
+      track.appendChild(b);
+      cards.push(b);
+    });
+  }
+
+  function indexOf(t) {
+    for (var i = 0; i < cards.length; i++) {
+      if (cards[i].getAttribute('data-tab') === t) { return i; }
+    }
+    return -1;
+  }
+
+  /* 让第 i 张卡落在视口正中（规范的「零测量」平移公式）：
+     translateX = 视口半宽 - 该卡中心距轨道左缘。
+     卡宽实时读第一张卡的 offsetWidth（响应式断点变化自动适配）；transform
+     用绝对值赋值而非逐次累加，避免误差漂移。 */
+  function centerIndex(i) {
+    if (!track || !wrapEl || !cards.length) { return; }
+    if (i < 0) { i = 0; }
+    if (i > cards.length - 1) { i = cards.length - 1; }
+    var w = cards[0].offsetWidth;
+    if (!w) { return; }
+    var vp = wrapEl.clientWidth;
+    var tx = vp / 2 - (i * (w + GAP) + w / 2);
+    track.style.transform = 'translateX(' + tx + 'px)';
+    /* 渐隐遮罩：仅该侧确有卡被裁出视口才点亮（±2px 容差防亚像素闪烁） */
+    var totalW = cards.length * (w + GAP) - GAP;
+    if (fadeL) { fadeL.classList.toggle('on', tx < -2); }
+    if (fadeR) { fadeR.classList.toggle('on', tx + totalW > vp + 2); }
+    /* 到边界置灰（不循环） */
+    if (btnPrev) { btnPrev.disabled = (i <= 0); }
+    if (btnNext) { btnNext.disabled = (i >= cards.length - 1); }
+  }
+
+  function showTab(t, silent) {
+    var ok = false, i;
+    for (i = 0; i < panels.length; i++) {
+      if (panels[i].getAttribute('data-tab') === t) { ok = true; break; }
+    }
+    if (!ok) t = panels.length ? panels[0].getAttribute('data-tab') : 'main';
+    for (i = 0; i < panels.length; i++) {
+      panels[i].classList.toggle('on', panels[i].getAttribute('data-tab') === t);
+    }
+    for (i = 0; i < cards.length; i++) {
+      var on = cards[i].getAttribute('data-tab') === t;
+      cards[i].classList.toggle('on', on);
+      cards[i].setAttribute('aria-selected', on ? 'true' : 'false');
+    }
+    curTab = t;
+    try { localStorage.setItem(TKEY, t); } catch (err) {}
+    if (history.replaceState) history.replaceState(null, '', '#' + t);
+    var idx = indexOf(t);
+    if (idx >= 0) { centerIndex(idx); }
+    if (!silent) {
+      try { window.scrollTo({ top: 0, behavior: 'auto' }); }
+      catch (err) { window.scrollTo(0, 0); }
+    }
+  }
+  window.showTab = showTab;
+
+  /* 左右箭头：步进 ±1，越界 clamp 到边界（不循环） */
+  function step(delta) {
+    var i = indexOf(curTab);
+    if (i < 0) { i = 0; }
+    var t = i + delta;
+    if (t < 0) { t = 0; }
+    if (t > cards.length - 1) { t = cards.length - 1; }
+    if (t === i || !cards[t]) { return; }
+    showTab(cards[t].getAttribute('data-tab'));
+  }
+  if (btnPrev) { btnPrev.addEventListener('click', function () { step(-1); }); }
+  if (btnNext) { btnNext.addEventListener('click', function () { step(1); }); }
+
+  /* 卡宽是实时读的，跨 420px 断点后重算即可 */
+  window.addEventListener('resize', function () { centerIndex(indexOf(curTab)); });
+
+  /* ── 整页横滑切栏（触摸设备）：左滑 → 下一栏；右滑 → 上一栏 ──
+     首次位移超过阈值即锁定主方向；只有判为横向才 preventDefault —— 这一步
+     顺带压掉了随后的 click，否则在卡片上滑动会「滑动切换 + 点击切换」双触发。
+     纵向不拦截，交给浏览器原生滚动（配合 CSS 的 touch-action:pan-y）。 */
+  var ts = null, dir = null, used = false, netX = 0;
+  document.body.addEventListener('touchstart', function (e) {
+    if (e.touches.length !== 1) { return; }         /* 多指触摸不进入手势流程 */
+    ts = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    dir = null; used = false; netX = 0;
+  }, { passive: true });
+  document.body.addEventListener('touchmove', function (e) {
+    if (!ts || e.touches.length !== 1) { return; }
+    var dx = e.touches[0].clientX - ts.x;
+    var dy = e.touches[0].clientY - ts.y;
+    netX = dx;
+    if (!dir && (Math.abs(dx) > SWIPE_DIR_LOCK || Math.abs(dy) > SWIPE_DIR_LOCK)) {
+      dir = Math.abs(dx) > Math.abs(dy) ? 'h' : 'v';
+    }
+    if (dir === 'h') {
+      if (e.cancelable) { e.preventDefault(); }
+      if (Math.abs(dx) > SWIPE_X) { used = true; }
+    }
+  }, { passive: false });                            /* 必须非 passive，否则 preventDefault 无效 */
+  function touchEnd() {
+    if (ts && dir === 'h' && used) { step(netX < 0 ? 1 : -1); }
+    ts = null; dir = null; used = false; netX = 0;
+  }
+  document.body.addEventListener('touchend', touchEnd, { passive: true });
+  document.body.addEventListener('touchcancel', touchEnd, { passive: true });
+
+  var savedView = null, savedTab = null;
+  try {
+    savedView = localStorage.getItem(VKEY);
+    savedTab = localStorage.getItem(TKEY);
+  } catch (err) {}
+  setView(savedView === 'novice' ? 'novice' : 'expert');
+
+  var hash = (location.hash || '').replace('#', '');
+  showTab(hash || savedTab || 'main', true);
+})();
+</script>
+
+<!-- ARCHIVE-NAV -->
+<a class="a-nav" href="index.html" title="查看往期早报日历">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"></rect><path d="M8 2v4M16 2v4M3 10h18"></path></svg>
+往期日历</a>
+<footer>
+  <!-- DISC --><p class="disclaim">信息来源于网络，重要内容请自行核实</p>
+  <p>每日 08:10 自动生成。</p>
+  <p>事实性内容来自公开检索结果，已逐条标注来源；「影响」与「跟你的关系」两段为分析判断，不构成投资建议。</p>
+</footer>
+
+<button class="to-top" id="toTop" type="button" title="返回顶部" aria-label="返回顶部" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"></path><path d="M5 12l7-7 7 7"></path></svg>
+</button>
+</body>
+</html>
