@@ -457,7 +457,6 @@ body.view-novice .a-nav:hover{background:var(--novice,#1a8a5a);color:#fff}
 @media print{.a-nav{display:none !important}}
 </style>
 </head>
-<body>
 <div class="topbar">
   <div class="topbar-in">
     <div class="brand">半导体日记<small>2026-10-06 周二</small></div>
@@ -465,9 +464,26 @@ body.view-novice .a-nav:hover{background:var(--novice,#1a8a5a);color:#fff}
       <button id="btn-expert" type="button" class="on" onclick="setView('expert')">专家版</button>
       <button id="btn-novice" type="button" onclick="setView('novice')">小白版</button>
     </div>
+    <!--DECK-->
+    <div class="deck-host">
+      <div class="deck-zone">
+        <button type="button" class="deck-arrow prev" id="deckPrev" aria-label="上一个栏目"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></button>
+        <div class="deck-wrap">
+          <span class="deck-fade left" id="fadeL" aria-hidden="true"></span>
+          <span class="deck-fade right" id="fadeR" aria-hidden="true"></span>
+          <div class="tabs" id="tabs" role="tablist" aria-label="栏目切换"></div>
+        </div>
+        <button type="button" class="deck-arrow next" id="deckNext" aria-label="下一个栏目"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg></button>
+      </div>
+      <div class="ind" aria-hidden="true"><span class="diamond"></span></div>
+    </div>
+    <!--/DECK-->
   </div>
 </div>
-<div class="lead panel on" data-tab="brief" data-label="今日速览">
+
+<div class="wrap">
+
+<div class="brief-box brief-main lead panel on" data-tab="brief" data-label="今日速览">
 <h2>今日主线</h2>
 <div class="t-expert">
 <p>供给端：三星把 2027 年 HBM4 供货报价定在每 Gb 4–5 美元的中高位、约为 HBM3E（约 1.5 美元）的 3 倍，存储定价权向 AI 品类集中；同一时间窗口里，SiC 衬底「加量须加价」、三星电机签下 2027 全年 MLCC 长约——上游紧平衡正在被逐项锁量锁价。</p>
@@ -482,7 +498,8 @@ body.view-novice .a-nav:hover{background:var(--novice,#1a8a5a);color:#fff}
 <p>短板环节：芯片制造离不开的超纯化学品、硅原料，国产供应在一步步补上；连银行都开始买国产的「液冷 AI 服务器整机柜」了——关键行业的信任正在建立。</p>
 </div>
 </div>
-<section class="panel" id="signals" data-tab="brief" data-label="今日速览">
+<section class="brief-box brief-signals panel" id="signals" data-tab="brief" data-label="今日速览">
+<div class="signals">
 <h3>跟踪信号</h3>
 <div class="t-expert">
 <ol>
@@ -500,9 +517,12 @@ body.view-novice .a-nav:hover{background:var(--novice,#1a8a5a);color:#fff}
 <li><b>盯碳化硅的供货。</b>做电动车、AI 电源用的碳化硅现在「加价才给货」——如果这股涨价传到电动车的成本里，说明这轮紧张是真的紧。</li>
 </ol>
 </div>
+</div>
 </section>
 <section class="panel" id="L1" data-tab="L1" data-label="上游支撑">
 <div class="sec-h"><h3>上游支撑</h3><span class="cnt">5 条（72h 窗口 4 条，放宽至近 7 天补 1 条）</span></div>
+    <div class="sec-note">EDA/IP、半导体材料、制造与封测设备</div>
+    <div class="bar"></div>
 <article class="item">
 <h4>
 <span class="t-expert">盛美上海公告在手订单 170.73 亿元、同比 +88.2%，全年营收指引 82–88 亿元</span>
@@ -579,8 +599,11 @@ body.view-novice .a-nav:hover{background:var(--novice,#1a8a5a);color:#fff}
 <span class="src">来源：观点网（引伯恩斯坦《全球半导体设备追踪》报告，10-04） · <a href="https://www.guandian.hk/article/20261004/10018394.html" target="_blank" rel="noopener">原文</a></span>
 </article>
 </section>
+
 <section class="panel" id="L2" data-tab="L2" data-label="芯片制造">
 <div class="sec-h"><h3>芯片设计与制造</h3><span class="cnt">9 条（72h 窗口 8 条，放宽至近 7 天补 1 条）</span></div>
+    <div class="sec-note">芯片设计、晶圆制造与先进封装</div>
+    <div class="bar"></div>
 <article class="item">
 <h4>
 <span class="t-expert">三星 2027 年 HBM4 供货报价定在每 Gb 4–5 美元中高位，约为 HBM3E（约 1.5 美元）的 3 倍，10 月谈判进入收尾</span>
@@ -717,8 +740,11 @@ body.view-novice .a-nav:hover{background:var(--novice,#1a8a5a);color:#fff}
 <span class="src">来源：The Elec（引 TechInsights 访谈，10-05） · <a href="https://www.thelec.net/news/articleView.html?idxno=14406" target="_blank" rel="noopener">原文</a></span>
 </article>
 </section>
+
 <section class="panel" id="L3" data-tab="L3" data-label="元器件">
 <div class="sec-h"><h3>元器件与传感器</h3><span class="cnt">5 条（72h 窗口 4 条，放宽至近 7 天补 1 条）</span></div>
+    <div class="sec-note">被动元件、功率器件、连接器与传感器</div>
+    <div class="bar"></div>
 <article class="item">
 <h4>
 <span class="t-expert">SiC 衬底供货吃紧、加量须加价：Wolfspeed 近日大涨、台股嘉晶一个月内涨超 84%，8 英寸良率爬坡与车规认证拖慢有效供给</span>
@@ -797,6 +823,8 @@ body.view-novice .a-nav:hover{background:var(--novice,#1a8a5a);color:#fff}
 </section>
 <section class="panel" id="L4" data-tab="L4" data-label="终端应用">
 <div class="sec-h"><h3>终端与应用</h3><span class="cnt">6 条（均在 72h 窗口内）</span></div>
+    <div class="sec-note">终端需求、智驾落地、算力基建与可穿戴产品</div>
+    <div class="bar"></div>
 <article class="item">
 <h4>
 <span class="t-expert">SIA：8 月全球半导体销售额 1597 亿美元、同比 +144.3%，前 8 个月累计首破 1 万亿美元、全年预计超 1.6 万亿</span>
@@ -880,21 +908,7 @@ body.view-novice .a-nav:hover{background:var(--novice,#1a8a5a);color:#fff}
 <div class="t-expert">
 <p>据网易 10 月 3 日刊出的汇总信息（引极客湾拆解），华为海思麒麟 9050 Pro 曝光规格：采用<b>逻辑裸片＋SRAM 裸片双 die 垂直堆叠的「逻辑折叠」架构</b>，两颗裸片尺寸均为 11.13 毫米 × 10.84 毫米、单颗面积 120.65 平方毫米，整颗芯片总面积 241.3 平方毫米，通过铜-铜混合键合连接、集成约 8 万根 TSV。性能上，<b>在 10–12W 的高负载区间，麒麟 9050 Pro 多核得分突破 8000 分</b>，同性能档位下功耗控制更优。</p>
 <p><b>影响：</b>双 die 垂直堆叠的核心收益是用「面积换性能」——在制程受限的前提下，通过把逻辑与存储分开制造再叠起来，缩短数据传输距离、提升能效。这一路线与华为向高通授权逻辑折叠技术所依赖专利的消息相互印证：<b>逻辑折叠已不只是设计方案，而是开始进入知识产权与量产标定阶段。</b>241.3 平方毫米的总面积相对可控，也说明该架构在良率与成本上做了取舍。</p>
-    <!--DECK-->
-    <div class="deck-host">
-      <div class="deck-zone">
-        <button type="button" class="deck-arrow prev" id="deckPrev" aria-label="上一个栏目"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></button>
-        <div class="deck-wrap">
-          <span class="deck-fade left" id="fadeL" aria-hidden="true"></span>
-          <span class="deck-fade right" id="fadeR" aria-hidden="true"></span>
-          <div class="tabs" id="tabs" role="tablist" aria-label="栏目切换"></div>
-        </div>
-        <button type="button" class="deck-arrow next" id="deckNext" aria-label="下一个栏目"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg></button>
-      </div>
-      <div class="ind" aria-hidden="true"><span class="diamond"></span></div>
-    </div>
-    <!--/DECK-->
-  </div>
+</div>
 <div class="t-novice">
 <p>华为新款手机芯片麒麟 9050 Pro 的规格被曝光：它用了「逻辑折叠」架构，说白了就是<b>把一块运算芯片和一块存储芯片上下叠起来</b>，两部分各约 120 平方毫米，合起来 241.3 平方毫米。实测在 10 到 12 瓦的高负载下，多核跑分超过 8000 分，同档对手里它的功耗更低、发热更小。</p>
 <p><b>跟你的关系：</b>不能买最先进的设备，就想办法用「叠加」来提升性能——这是华为在受限条件下的解题思路。前面提到它对高通授权了这项技术所依赖的专利，说明这条路线正在被行业认真对待，而不是孤立的尝试。</p>
@@ -902,6 +916,9 @@ body.view-novice .a-nav:hover{background:var(--novice,#1a8a5a);color:#fff}
 <span class="src">来源：网易（引极客湾拆解，10-03） · <a href="https://www.163.com/dy/article/L8BO67NM05503WTT.html" target="_blank" rel="noopener">原文</a></span>
 </article>
 </section>
+
+</div>
+
 <script>
 (function () {
   var VKEY = 'zaobao-view', TKEY = 'zaobao-tab';
@@ -1064,6 +1081,11 @@ body.view-novice .a-nav:hover{background:var(--novice,#1a8a5a);color:#fff}
   showTab(hash || savedTab || 'main', true);
 })();
 </script>
+
+<!-- ARCHIVE-NAV -->
+<a class="a-nav" href="index.html" title="查看往期早报日历">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"></rect><path d="M8 2v4M16 2v4M3 10h18"></path></svg>
+往期日历</a>
 <footer>
   <!-- DISC --><p class="disclaim">信息来源于网络，重要内容请自行核实</p>
   <p>每日 08:10 自动生成。</p>
@@ -1073,9 +1095,5 @@ body.view-novice .a-nav:hover{background:var(--novice,#1a8a5a);color:#fff}
 <button class="to-top" id="toTop" type="button" title="返回顶部" aria-label="返回顶部" onclick="window.scrollTo({top:0,behavior:'smooth'})">
 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"></path><path d="M5 12l7-7 7 7"></path></svg>
 </button>
-<!-- ARCHIVE-NAV -->
-<a class="a-nav" href="index.html" title="查看往期早报日历">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"></rect><path d="M8 2v4M16 2v4M3 10h18"></path></svg>
-往期日历</a>
 </body>
 </html>
