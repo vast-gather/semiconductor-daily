@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>半导体日记 · 2026-10-07</title>
+<style>
+:root{
+  --bg:#f6f7f9;
+  --card:#ffffff;
+  --text:#1b1f24;
+  --text-2:#4b5563;
+  --text-3:#6b7280;
+  --line:#e3e6ea;
+  --accent:#1d6fdc;
+  --accent-soft:#e8f0fd;
+  --novice:#1a8a5a;
+  --novice-soft:#e6f6ee;
+  --warn:#b45309;
+  --warn-soft:#fdf3e3;
+  --shadow:0 1px 2px rgba(16,24,40,.05),0 8px 24px rgba(16,24,40,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0f1216;
+    --card:#171b21;
+    --text:#e8eaee;
+    --text-2:#b6bcc6;
+    --text-3:#8b929d;
+    --line:#2a303a;
+    --accent:#5aa2ff;
+    --accent-soft:#16233a;
+    --novice:#4ecf95;
+    --novice-soft:#132b22;
+    --warn:#e0a458;
+    --warn-soft:#2c2417;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:15px;line-height:1.75;
+}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ── 顶部固定栏 ── */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:color-mix(in srgb, var(--card) 88%, transparent);
+  backdrop-filter:saturate(180%) blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.topbar-in{
+  max-width:860px;margin:0 auto;padding:10px 18px;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+}
+.brand{font-weight:700;letter-spacing:.2px;font-size:15px;flex:1;min-width:150px}
+.brand small{display:block;font-weight:400;color:var(--text-3);font-size:11.5px;letter-spacing:0}
+.switch{display:flex;gap:2px;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:2px}
+.switch button{
+  font:inherit;font-size:13px;padding:5px 14px;border:0;border-radius:7px;
+  background:transparent;color:var(--text-2);cursor:pointer;transition:.15s;
+}
+.switch button:hover{color:var(--text)}
+.switch button.on{background:var(--accent);color:#fff}
+body.view-novice .switch button.on{background:var(--novice)}
+body.view-novice .topbar{border-bottom-color:color-mix(in srgb,var(--novice) 35%,var(--line))}
+
+/* ── 视图切换核心 ── */
+body.view-expert .t-novice{display:none !important}
+body.view-novice .t-expert{display:none !important}
+
+.wrap{max-width:860px;margin:0 auto;padding:26px 18px 80px}
+
+/* ── 报头 ── */
+.head{margin-bottom:22px}
+.head h1{font-size:26px;line-height:1.3;margin:0 0 8px;letter-spacing:-.3px}
+.date{color:var(--text-2);font-size:14px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.stat{
+  background:var(--card);border:1px solid var(--line);border-radius:8px;
+  padding:6px 12px;font-size:12.5px;color:var(--text-2);
+}
+.stat b{color:var(--text);font-variant-numeric:tabular-nums}
+.trial{
+  margin-top:14px;border-left:3px solid var(--warn);
+  background:var(--warn-soft);color:var(--text-2);
+  padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;
+}
+.trial b{color:var(--warn)}
+
+/* ── 锚点导航 ── */
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 6px}
+.nav a{
+  border:1px solid var(--line);background:var(--card);border-radius:999px;
+  padding:5px 14px;font-size:13px;color:var(--text-2);
+}
+.nav a:hover{border-color:var(--accent);color:var(--accent);text-decoration:none}
+
+/* ── 主线 ── */
+.lead{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:18px 20px;margin:18px 0 26px;box-shadow:var(--shadow);
+  border-top:3px solid var(--accent);
+}
+body.view-novice .lead{border-top-color:var(--novice)}
+.lead h2{margin:0 0 8px;font-size:15px;letter-spacing:.4px;color:var(--accent)}
+body.view-novice .lead h2{color:var(--novice)}
+.lead p{margin:0;color:var(--text-2);font-size:14.5px}
+
+/* ── 分区 ── */
+section{margin:0 0 34px;scroll-margin-top:72px}
+.sec-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 4px;padding-top:6px}
+.sec-h h3{font-size:19px;margin:0;letter-spacing:-.2px}
+.sec-h .cnt{font-size:12.5px;color:var(--text-3);font-weight:400}
+.sec-note{color:var(--text-3);font-size:13px;margin:0 0 16px}
+.bar{height:3px;width:46px;border-radius:2px;background:var(--accent);margin:8px 0 16px}
+body.view-novice .bar{background:var(--novice)}
+
+/* ── 条目 ── */
+.item{
+  background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:15px 18px;margin:0 0 12px;box-shadow:var(--shadow);
+}
+.item:hover{border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
+body.view-novice .item:hover{border-color:color-mix(in srgb,var(--novice) 40%,var(--line))}
+.item h4{font-size:15.5px;line-height:1.55;margin:0 0 9px;font-weight:700}
+.item p{margin:0 0 7px;color:var(--text-2);font-size:14.5px}
+.item p:last-of-type{margin-bottom:0}
+.impact{color:var(--text) !important}
+.t-expert .impact{border-left:2px solid var(--accent);padding-left:10px}
+.t-novice .impact{border-left:2px solid var(--novice);padding-left:10px}
+.src{
+  display:block;margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);
+  font-size:12px;color:var(--text-3);
+}
+
+/* ── 跟踪信号 ── */
+.signals{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:18px 20px;box-shadow:var(--shadow);
+}
+.signals h3{margin:0 0 12px;font-size:17px}
+.signals ol{margin:0;padding-left:20px}
+.signals li{margin-bottom:10px;color:var(--text-2);font-size:14.5px}
+.signals li b{color:var(--text)}
+
+footer{
+  max-width:860px;margin:0 auto;padding:20px 18px 60px;
+  color:var(--text-3);font-size:12.5px;border-top:1px solid var(--line);
+}
+footer p{margin:0 0 6px}
+
+@media print{
+  .topbar,.nav{display:none}
+  body{background:#fff}
+  .item,.lead,.signals{box-shadow:none;break-inside:avoid}
+}
+@media (max-width:600px){
+  .wrap{padding:18px 12px 60px}
+  .head h1{font-size:21px}
+  body{font-size:14px}
+  .item{padding:13px 14px}
+}
+
+/* ══ 栏目切换卡带（Deck） ══
+   借鉴《栏目切换 UI 与交互规范》v1.0 的 C2~C5（卡带 / 指示器 / 渐隐 / 箭头）：
+   · 整条轨道 translateX 平移，让选中卡落在视口正中（纯数学计算、零 DOM 测量）
+   · 选中卡用 transform:scale() 放大 —— 不参与布局，故各卡水平中心间距恒定，
+     平移步长恒定；同时写更大的 height 只为视觉外框，不影响水平中心
+   · 动效统一 200ms cubic-bezier(.2,0,0,1)，遮罩 200ms 淡入淡出
+   规范的取色基于深蓝吸顶条（硬编码 #0A4C8C + 白卡），此处全部反向映射为
+   项目 CSS 变量，以兼容浅色/深色主题与专家版/小白版两种强调色。
+   结构与容器位置由 normalize_tabs() 每次强制重建 —— 不要手写这一块。 */
+.deck-host{
+  width:100%;
+  /* 动效 Token 与卡带尺寸在此局部声明，不写 :root，避免影响页面其它部分 */
+  --motion-fast:150ms;--motion-base:200ms;--ease-standard:cubic-bezier(.2,0,0,1);
+  --deck-w:96px;--deck-h-side:28px;--deck-h-active:36px;--deck-scale:1.2;
+}
+/* 整页横滑切栏：纵向滚动交给浏览器原生，横向由脚本接管 */
+body{touch-action:pan-y}
+/* 视口：裁掉视口外的卡，给选中卡的阴影留上下余量 */
+.deck-zone{position:relative;overflow:hidden;padding:7px 0 4px}
+.deck-wrap{position:relative;height:calc(var(--deck-h-active) + 12px)}
+/* 两端渐隐遮罩：仅当该侧确有卡被裁出视口时点亮；不遮挡卡片点击 */
+.deck-fade{
+  position:absolute;top:0;bottom:0;width:22px;z-index:1;
+  pointer-events:none;opacity:0;
+  transition:opacity var(--motion-base) var(--ease-standard);
+}
+.deck-fade.left{
+  left:0;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--card,#fff) 88%,transparent) 0%,transparent 100%);
+}
+.deck-fade.right{
+  right:0;
+  background:linear-gradient(270deg,color-mix(in srgb,var(--card,#fff) 88%,transparent) 0%,transparent 100%);
+}
+.deck-fade.on{opacity:1}
+/* 轨道：等宽卡 + 整条平移（translateX 由脚本赋值，绝对值而非累加） */
+.tabs{
+  display:flex;align-items:center;gap:8px;width:max-content;height:100%;
+  will-change:transform;
+  transition:transform var(--motion-base) var(--ease-standard);
+}
+/* 栏目卡 */
+.tabs button{
+  flex:0 0 auto;width:var(--deck-w);height:var(--deck-h-side);padding:0;
+  display:inline-flex;align-items:center;justify-content:center;
+  font:inherit;font-size:13px;font-weight:500;line-height:1.2;white-space:nowrap;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  border:1px solid var(--line,#e3e6ea);background:var(--bg,#f6f7f9);
+  color:var(--text,#1b1f24);border-radius:10px;
+  transition:transform var(--motion-base) var(--ease-standard),
+             background-color var(--motion-base) var(--ease-standard),
+             color var(--motion-base) var(--ease-standard),
+             border-color var(--motion-base) var(--ease-standard),
+             box-shadow var(--motion-base) var(--ease-standard);
+}
+/* 选中卡：放大 + 强调色填充（scale 不占布局 → 两侧卡水平中心不跳动） */
+.tabs button.on{
+  transform:scale(var(--deck-scale));
+  height:var(--deck-h-active);font-size:15px;font-weight:600;
+  background:var(--accent,#1d6fdc);border-color:var(--accent,#1d6fdc);color:#fff;
+  box-shadow:0 3px 10px color-mix(in srgb,var(--accent,#1d6fdc) 30%,transparent);
+}
+body.view-novice .tabs button.on{
+  background:var(--novice,#1a8a5a);border-color:var(--novice,#1a8a5a);
+  box-shadow:0 3px 10px color-mix(in srgb,var(--novice,#1a8a5a) 30%,transparent);
+}
+/* 按压态：必须小于对应常态缩放，否则视觉上"缩回去" */
+.tabs button:active{transform:scale(.96)}
+.tabs button.on:active{transform:scale(1.16)}
+/* 悬停只对真有指针的设备生效，避免触摸端点击后残留 hover */
+@media (hover:hover){
+  .tabs button:hover{
+    border-color:var(--accent,#1d6fdc);box-shadow:0 2px 6px rgba(16,24,40,.12);
+  }
+  .tabs button.on:hover{box-shadow:0 3px 10px color-mix(in srgb,var(--accent,#1d6fdc) 30%,transparent)}
+}
+@media (hover:hover){
+  body.view-novice .tabs button:hover{border-color:var(--novice,#1a8a5a)}
+  body.view-novice .tabs button.on:hover{
+    box-shadow:0 3px 10px color-mix(in srgb,var(--novice,#1a8a5a) 30%,transparent);
+  }
+}
+/* 焦点环：outline 不改变布局尺寸 */
+.tabs button:focus-visible,.deck-arrow:focus-visible{
+  outline:2px solid var(--accent,#1d6fdc);outline-offset:2px;
+}
+body.view-novice .tabs button:focus-visible,
+body.view-novice .deck-arrow:focus-visible{outline-color:var(--novice,#1a8a5a)}
+/* 左右箭头：指针设备上的步进切换；触摸设备隐藏，改由手势切换 */
+.deck-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:2;
+  width:28px;height:28px;padding:0;border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--card,#fff);border:1px solid var(--line,#e3e6ea);
+  color:var(--accent,#1d6fdc);
+  box-shadow:0 1px 4px rgba(16,24,40,.1);
+  transition:opacity var(--motion-fast) var(--ease-standard),
+             border-color var(--motion-fast) var(--ease-standard);
+}
+body.view-novice .deck-arrow{color:var(--novice,#1a8a5a)}
+.deck-arrow svg{width:16px;height:16px}
+.deck-arrow.prev{left:8px}
+.deck-arrow.next{right:8px}
+.deck-arrow:disabled{opacity:.35;cursor:not-allowed}
+@media (hover:none){
+  .deck-arrow{display:none}
+}
+/* 位置指示器：固定居于内容区水平正中、不随切换平移 ——
+   它代表"居中槽位"，被选中的卡由轨道平移居中至该槽位，故始终正对选中卡 */
+.ind{
+  display:flex;align-items:center;justify-content:center;
+  width:100%;min-height:9px;margin:1px 0 3px;pointer-events:none;
+}
+.ind .diamond{
+  width:7px;height:7px;background:var(--accent,#1d6fdc);transform:rotate(45deg);
+}
+body.view-novice .ind .diamond{background:var(--novice,#1a8a5a)}
+/* 深色主题：强调色本身偏亮，选中卡文字改深色才看得清（对齐 .to-top 既有做法） */
+@media (prefers-color-scheme: dark){
+  .tabs button.on{color:#0d1420}
+  .tabs button{box-shadow:none}
+}
+/* 关闭动效偏好：时长归零，切换瞬时完成，功能不退化 */
+@media (prefers-reduced-motion: reduce){
+  .deck-host{--motion-fast:0ms;--motion-base:0ms}
+}
+
+/* ══ 顶栏尺寸（用户 2026-09-20 两轮调整：放大 + 报头已删） ══ */
+.topbar-in{padding:14px 18px;gap:12px}
+.brand{font-size:18px;line-height:1.4}
+.brand small{font-size:15px;font-weight:500;margin-top:4px;letter-spacing:.2px;opacity:.88}
+.switch button{font-size:14px;padding:6px 16px}
+/* 报头（.head）已由本脚本删除，标题与日期只保留在顶栏 */
+
+/* 面板显隐 */
+.panel{display:none}
+.panel.on{display:block}
+
+/* ══ 今日速览：主线框 + 跟踪信号框，两色区分 ══ */
+.brief-box{border-radius:14px;padding:15px 17px 13px;margin:0 0 18px;
+  border:1px solid;border-left-width:4px}
+.brief-main{
+  background:rgba(29,111,220,.055);
+  border-color:rgba(29,111,220,.26);
+  border-left-color:var(--accent,#1d6fdc);
+}
+body.view-novice .brief-main{
+  background:rgba(26,138,90,.07);
+  border-color:rgba(26,138,90,.28);
+  border-left-color:var(--novice,#1a8a5a);
+}
+.brief-signals{
+  background:rgba(217,119,6,.065);
+  border-color:rgba(217,119,6,.3);
+  border-left-color:#d97706;
+}
+/* 框内小标题：色块点 + 字号统一（h2 / h3 两处不同标签，视觉拉齐） */
+.brief-main > h2,
+.brief-signals .sec-h > h3{
+  display:flex;align-items:center;gap:8px;margin:0 0 11px;
+  font-size:15px;font-weight:700;line-height:1.5;
+}
+.brief-main > h2::before,
+.brief-signals .sec-h > h3::before{
+  content:"";width:7px;height:7px;border-radius:2px;flex:none;
+}
+.brief-main > h2::before{background:var(--accent,#1d6fdc)}
+body.view-novice .brief-main > h2::before{background:var(--novice,#1a8a5a)}
+.brief-signals .sec-h > h3::before{background:#d97706}
+.brief-box > :last-child{margin-bottom:0}
+@media (prefers-color-scheme: dark){
+  .brief-main{background:rgba(76,136,236,.13);border-color:rgba(76,136,236,.32)}
+  body.view-novice .brief-main{background:rgba(46,168,112,.13);border-color:rgba(46,168,112,.32)}
+  .brief-signals{background:rgba(217,140,40,.14);border-color:rgba(217,140,40,.34)}
+}
+
+/* ══ 可读性排版 ══ */
+/* 今日主线：段落之间留间距，不要糊成一整块 */
+.lead p + p{margin-top:13px}
+/* 来源行：原链接必须一眼可见（用户 2026-09-21 要求每条都附原链接） */
+.src{display:inline-block;margin-top:9px;font-size:12.5px;line-height:1.6;
+  color:var(--text-3,#6b7280)}
+.src a{
+  color:var(--accent,#1d6fdc);font-weight:600;
+  text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px;
+}
+.src a::after{content:"↗";font-size:11px;margin-left:2px;opacity:.85}
+.src a:hover{text-decoration-thickness:2px}
+body.view-novice .src a{color:var(--novice,#1a8a5a)}
+/* 跟踪信号：小标题独占一行，说明另起一行 */
+.signals ol{padding-left:22px}
+.signals li{margin-bottom:15px;line-height:1.75}
+.signals li b{display:block;margin-bottom:3px;line-height:1.6}
+
+/* ══ 页脚免责声明（用户 2026-09-21 要求，脚本统一注入） ══ */
+footer p.disclaim{
+  display:inline-block;margin:0 0 9px;padding:6px 13px;
+  border-radius:9px;font-size:13px;font-weight:600;line-height:1.5;
+  color:#b45309;background:rgba(217,119,6,.09);
+  border:1px solid rgba(217,119,6,.28);
+}
+@media (prefers-color-scheme: dark){
+  footer p.disclaim{color:#f0b357;background:rgba(217,140,40,.14);border-color:rgba(217,140,40,.34)}
+}
+
+/* ══ 返回顶部（常显、右下偏上，实心高对比） ══ */
+.to-top{
+  position:fixed;right:30px;bottom:56px;z-index:90;
+  width:46px;height:46px;border-radius:50%;cursor:pointer;padding:0;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--accent,#1d6fdc);
+  background:var(--accent,#1d6fdc);color:#fff;
+  box-shadow:0 3px 12px rgba(16,24,40,.32),
+             0 0 0 4px color-mix(in srgb, var(--accent,#1d6fdc) 16%, transparent);
+  transition:transform .15s,box-shadow .15s,background .15s,border-color .15s;
+}
+.to-top svg{stroke-width:2.6}
+body.view-novice .to-top{
+  border-color:var(--novice,#1a8a5a);background:var(--novice,#1a8a5a);
+  box-shadow:0 3px 12px rgba(16,24,40,.32),
+             0 0 0 4px color-mix(in srgb, var(--novice,#1a8a5a) 16%, transparent);
+}
+.to-top:hover,.to-top:focus-visible{
+  transform:translateY(-2px);
+  box-shadow:0 6px 18px rgba(16,24,40,.38),
+             0 0 0 5px color-mix(in srgb, var(--accent,#1d6fdc) 22%, transparent);
+}
+body.view-novice .to-top:hover,body.view-novice .to-top:focus-visible{
+  box-shadow:0 6px 18px rgba(16,24,40,.38),
+             0 0 0 5px color-mix(in srgb, var(--novice,#1a8a5a) 22%, transparent);
+}
+/* 深色主题下强调色本身偏亮，图标改用深色才看得清 */
+@media (prefers-color-scheme: dark){
+  .to-top{color:#0d1420}
+}
+@media (max-width:640px){
+  .brief-box{padding:13px 14px 11px;border-radius:12px;margin-bottom:15px}
+  .to-top{right:16px;bottom:80px;width:44px;height:44px}
+  .topbar-in{padding:11px 12px;gap:8px}
+  .brand{font-size:16px}
+  .brand small{font-size:13.5px;margin-top:3px}
+  .switch button{font-size:13px;padding:5px 13px}
+}
+/* 窄屏再收一档卡带尺寸（对应规范 420px 断点） */
+@media (max-width:420px){
+  .deck-host{--deck-w:88px;--deck-h-side:26px;--deck-h-active:33px;--deck-scale:1.18}
+  .deck-zone{padding:5px 0 3px}
+  .tabs button{font-size:12.5px}
+  .tabs button.on{font-size:14.5px}
+}
+
+/* ══ 今日主线正文加深（2026-09-22：用户反馈与面板底色对比太弱） ══
+   页面自带 .lead p{color:var(--text-2)} 用的是次级灰（浅 #4b5563 / 深 #b6bcc6），
+   压在带蓝调的 brief-main 面板底上对比度只有 ~7.7:1 / ~8.4:1，14.5px 正文读起来发虚。
+   这里改用主文字色 --text（浅 #1b1f24 / 深 #e8eaee），对比度升到 ~15:1 / ~13:1。
+   方向说明：浅色主题要「更黑」= 更深；深色主题同一个变量自动变「更白」——
+   暗底上再压更黑只会更糊，只有更亮才是提高对比，所以两档必须随主题翻转。
+   选择器 .brief-box.brief-main p 权重(0,2,1) 高于页面 .lead p(0,1,1)，
+   再加 !important 防止后续页面自带规则反压。作用域只限主线框内的段落：
+   新闻条目正文、来源行、跟踪信号框、顶栏一律不受影响。 */
+.brief-box.brief-main p{color:var(--text) !important}
+
+@media print{
+  .deck-host,.to-top{display:none !important}
+  .panel{display:block !important}
+}
+
+</style>
+<noscript><style>.panel{display:block !important}</style></noscript>
+<style>/* ARCHIVE-NAV */
+.a-nav{
+  position:fixed;left:30px;bottom:56px;z-index:90;
+  display:inline-flex;align-items:center;gap:6px;
+  padding:0 14px;height:46px;border-radius:23px;
+  font-size:13.5px;font-weight:600;text-decoration:none;
+  border:1.5px solid var(--accent,#1d6fdc);
+  background:var(--card,#fff);color:var(--accent,#1d6fdc);
+  box-shadow:0 3px 12px rgba(16,24,40,.24);
+  transition:transform .15s,box-shadow .15s,background .15s,color .15s;
+}
+.a-nav svg{width:16px;height:16px;flex:0 0 auto}
+.a-nav:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(16,24,40,.3);
+  background:var(--accent,#1d6fdc);color:#fff}
+body.view-novice .a-nav{border-color:var(--novice,#1a8a5a);color:var(--novice,#1a8a5a)}
+body.view-novice .a-nav:hover{background:var(--novice,#1a8a5a);color:#fff}
+@media (prefers-color-scheme:dark){.a-nav:hover{color:#0d1420}}
+@media (max-width:640px){.a-nav{left:16px;bottom:80px;height:44px;padding:0 12px;font-size:13px}}
+@media print{.a-nav{display:none !important}}
+</style>
+</head>
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="brand">半导体日记<small>2026-10-07 周三</small></div>
+    <div class="switch">
+      <button id="btn-expert" type="button" class="on" onclick="setView('expert')">专家版</button>
+      <button id="btn-novice" type="button" onclick="setView('novice')">小白版</button>
+    </div>
+    <!--DECK-->
+    <div class="deck-host">
+      <div class="deck-zone">
+        <button type="button" class="deck-arrow prev" id="deckPrev" aria-label="上一个栏目"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></button>
+        <div class="deck-wrap">
+          <span class="deck-fade left" id="fadeL" aria-hidden="true"></span>
+          <span class="deck-fade right" id="fadeR" aria-hidden="true"></span>
+          <div class="tabs" id="tabs" role="tablist" aria-label="栏目切换"></div>
+        </div>
+        <button type="button" class="deck-arrow next" id="deckNext" aria-label="下一个栏目"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg></button>
+      </div>
+      <div class="ind" aria-hidden="true"><span class="diamond"></span></div>
+    </div>
+    <!--/DECK-->
+  </div>
+</div>
+
+<div class="wrap">
+
+<div class="brief-box brief-main lead panel on" data-tab="brief" data-label="今日速览">
+<h2>今日主线</h2>
+<div class="t-expert">
+<p>供给端：台积电先进晶圆确定 2027 年一季度在已涨 10%–20% 的基础上再上调 6%–8%，理由是制造成本与电力费用；代工、封测成本同步上行，电源管理 IC、驱动 IC、MCU 厂商正酝酿 2026 年底至 2027 年初的第二轮涨价——设计公司的成本转嫁窗口正在打开。</p>
+<p>需求端：存储涨价正式传导到终端——余承东披露每部手机成本已增加超 200 美元、华为「未来不得不提价」，iPhone 18 Pro 内存规格从原计划 16GB 缩至 12GB；韩国宣布 4.7 万亿韩元前沿 AI 模型项目（含 1 万块英伟达 Vera Rubin GPU），主权 AI 竞赛再加码。</p>
+<p>产能与出清：日本 Rapidus 拉上东芝信息系统等 17 家伙伴补齐芯片设计服务短板、加速争取客户；国内器件小厂浙江鸿粤成立不足两年进入破产审查——扩产潮下的尾部出清信号值得留意。</p>
+</div>
+<div class="t-novice">
+<p>供给端：造芯片的成本又要涨了——台积电最先进的晶圆在已涨一至两成的基础上，2027 年一季度还要再涨 6% 到 8%，理由是制造和电费成本上升。给芯片「代加工」和「封装」的环节都在涨，做芯片设计的小公司扛不住，准备把产品再涨价转嫁出去。</p>
+<p>需求端：内存涨价已经烧到我们买的东西上了——华为余承东说存储涨价让每部手机成本多了超过 200 美元，华为「未来不得不提价」；苹果更直接，把新 iPhone 的内存从原计划的 16GB 缩水到 12GB，用「少给内存」来省成本。韩国则宣布花约 35 亿美元搞本国 AI 大模型，其中 3.9 万亿韩元用来买 1 万块英伟达最新 GPU。</p>
+<p>产能与出清：日本的芯片新厂 Rapidus 拉上 17 家伙伴帮客户做设计、抢订单；国内一家成立不到两年的半导体器件小厂进入破产审查——行情越热，越要看到尾部公司在出局。</p>
+</div>
+</div>
+<section class="brief-box brief-signals panel" id="signals" data-tab="brief" data-label="今日速览">
+<div class="signals">
+<h3>跟踪信号</h3>
+<div class="t-expert">
+<ol>
+<li><b>台积电 2027 年涨价的客户接受度。</b>「先涨 10%–20%、再涨 6%–8%」的两段式路径若被大客户全盘接受，先进制程定价将进入制度化上行通道，直接抬高 2027 年旗舰芯片物料成本与 AI 算力租赁价格中枢。</li>
+<li><b>存储涨价向零售价传导的节奏。</b>华为已明示「未来不得不提价」，苹果选择缩内存保成本——Q4 到明年初各家旗舰的定价与配置策略，是判断涨价周期还能走多远的最直接读数。</li>
+<li><b>代工涨价的二轮确认。</b>电源管理 IC、驱动 IC、MCU 的第二轮涨价（2026 年底至 2027 年初、5% 至两位数）能否落地，同时观察供应商对「过度下单」的甄别——真实需求与囤货的区分决定 2027 年的价格斜率。</li>
+<li><b>器件环节的出清信号。</b>浙江鸿粤成立不足两年即进入破产审查，关注后续是否出现更多中小器件/设备厂资金链断裂——出清速度是行业景气集中度的反向指标。</li>
+</ol>
+</div>
+<div class="t-novice">
+<ol>
+<li><b>盯台积电的涨价。</b>先涨一至两成、再涨 6% 到 8%——如果大客户都认了，说明「芯片越来越贵」会持续到 2027 年以后，AI 产品的价格降不下来。</li>
+<li><b>盯手机的价格。</b>华为说要提价，苹果选择少给内存——接下来几个月各家新手机怎么定价、配多大内存，最能看出内存涨价涨到哪一步了。</li>
+<li><b>盯第二轮涨价函。</b>做电源芯片、小芯片的厂商准备在年底再涨一轮——涨得动，说明下游真缺货；涨不动，说明有人在囤货炒作。</li>
+<li><b>盯小厂的生存。</b>成立不到两年的器件厂进入破产审查——行情热归热，钱都流向了大厂，尾部公司正在出局，这类信号后面可能还有。</li>
+</ol>
+</div>
+</div>
+</section>
+<section class="panel" id="L1" data-tab="L1" data-label="上游支撑">
+<div class="sec-h"><h3>上游支撑</h3><span class="cnt">1 条（72h 内候选 1 条，达标 1 条）</span></div>
+<div class="sec-note">EDA/IP、半导体材料、制造与封测设备</div>
+<div class="bar"></div>
+<article class="item">
+<h4>
+<span class="t-expert">浙江鸿粤半导体器件进入破产审查：成立不足两年，案号（2026）浙 0822 破 47 号</span>
+<span class="t-novice">一家成立不到两年的半导体小厂，进入破产审查了</span>
+</h4>
+<div class="t-expert">
+<p>爱集微 10 月 7 日报道（引全国企业破产重整案件信息网），浙江鸿粤半导体器件有限公司已正式进入破产审查程序，破产案件案号为（2026）浙 0822 破 47 号（案号对应浙江江山市法院）。公司成立于 2024 年 3 月 28 日、<b>成立不足两年</b>，主营半导体器件专用设备制造与销售、集成电路制造/销售/设计、半导体照明器件、光通信设备、电子元器件等；2024 年 5 月备案的项目曾规划「年产 4000 万只 IC 集成电路、8000 万米键合丝线、8500kk LED 光源」。破产申请人未披露。</p>
+<p><b>影响：</b>在全行业高景气、扩产公告密集的背景下，一家成立不足两年的器件厂进入破产审查，提示景气正在剧烈分化——订单、资本与人才向头部集中时，缺乏客户验证与现金流的小产线在加速出清。单案对产业链影响有限，但对「扩产即安全」的叙事是一个值得记录的反向样本。</p>
+</div>
+<div class="t-novice">
+<p>浙江一家叫鸿粤的半导体小公司进入破产审查了——它 2024 年 3 月才成立，干了不到两年。它原本想做芯片、做键合丝、做 LED 灯珠，还规划过不小的产能，但现在走到了破产审查这一步（案子在浙江江山的法院，申请人是谁还没有公开）。</p>
+<p><b>跟你的关系：</b>现在的芯片行业看起来到处在扩张，但钱和订单其实都涌向了大厂。小公司拿不到客户、撑不住资金链就会出局——这种「热闹行业里的小厂出清」，是判断行业真正格局的另一种信号。</p>
+</div>
+<span class="src">来源：爱集微（10-07，引全国企业破产重整案件信息网） · <a href="https://www.ijiwei.com/n/1115529" target="_blank" rel="noopener">原文</a></span>
+</article>
+</section>
+<section class="panel" id="L2" data-tab="L2" data-label="芯片制造">
+<div class="sec-h"><h3>芯片设计与制造</h3><span class="cnt">3 条（72h 内候选 5 条，达标 3 条）</span></div>
+<div class="sec-note">芯片设计、晶圆制造与先进封装</div>
+<div class="bar"></div>
+<article class="item">
+<h4>
+<span class="t-expert">台积电先进晶圆 2027 年一季度再上调 6%–8%：在已涨 10%–20% 基础上叠加，2nm 订单目标上调 15%–20%</span>
+<span class="t-novice">台积电最先进的晶圆还要再涨价：先涨一至两成，明年一季度再涨 6%–8%</span>
+</h4>
+<div class="t-expert">
+<p>IT之家 10 月 5 日报道（援引韩国 ddaily 10 月 2 日发文），台积电计划 <b>2027 年第一季度针对最先进晶圆出货价格再次上调约 6%–8%</b>，理由是制造成本和电力费用上涨——这是在其先进制程此前已决定上调 <b>10%–20%</b> 基础上的进一步涨价。报道同时称，台积电 2nm 订单激增，公司已将晶圆订单目标较原计划提高 15%–20%；三星则在推进第 2 代 2nm 制程 SF2P，目标将良率提升至 70% 以上，若良率获验证，有望承接台积电涨价与产能紧张而外溢的订单。</p>
+<p><b>影响：</b>「先涨 10%–20%、再涨 6%–8%」的两段式路径，说明台积电正把 AI 需求溢价制度化而非一次性计提——电力与海外建厂成本是长期变量，涨价有了成本侧的持续理由。对设计公司，旗舰芯片的晶圆成本在两年内复合上行；对代工竞争格局，三星 SF2P 的良率验证成为承接外溢订单的关键变量。</p>
+</div>
+<div class="t-novice">
+<p>给苹果、英伟达这些大客户「代工造芯片」的台积电又要涨价了：最先进的晶圆此前已经决定涨 10% 到 20%，现在又计划在 2027 年一季度<b>再涨 6% 到 8%</b>，理由是制造和电费越来越贵。它的 2 纳米订单多到超出计划，订单目标上调了 15% 到 20%。竞争对手三星正在改进第二代 2 纳米工艺，想把良率做到 70% 以上，好接住因台积电涨价而流失的客户。</p>
+<p><b>跟你的关系：</b>台积电是全世界大多数高端芯片的唯一代工厂，它涨价几乎等于「所有高端电子产品都要变贵」。两次涨价叠在一起，2027 年的旗舰手机、AI 服务器成本会明显抬升——这也是华为说「撑不住要提价」、苹果选择缩内存的深层原因。</p>
+</div>
+<span class="src">来源：IT之家（10-05，援引韩国 ddaily） · <a href="https://www.ithome.com/1/009/740.htm" target="_blank" rel="noopener">原文</a></span>
+</article>
+<article class="item">
+<h4>
+<span class="t-expert">代工与后端制造成本全面上行：电源管理 IC、驱动 IC、MCU 酝酿 2026 年底至 2027 年初二轮涨价 5% 至两位数</span>
+<span class="t-novice">造芯片的各环节都在涨：代工涨、封测涨，芯片设计公司只能跟着涨</span>
+</h4>
+<div class="t-expert">
+<p>爱集微 10 月 6 日报道（综合台媒、路透社与 Digital Daily 信息），成本上行正沿产业链传导：<b>电源管理 IC、驱动 IC、MCU 供应商考虑在 2026 年底至 2027 年初进行第二轮涨价，涨幅可能在 5% 至两位数</b>；台积电成熟制程预计 2027 年 1 月起上涨约 3%–10%，2nm 晶圆在已涨 10%–20% 基础上再上调 6%–8%。国内代工端，中芯国际 2026 年第二季度平均晶圆售价环比上涨 5.7%、产能利用率达 93.7%。报道还提到两点行为变化：客户为防涨价提前下单，但供应商警惕「过度下单」，正把订单量与去年对比来调整出货；客户要求避开中国大陆供应链，但转向美国代工「未必具有成本优势」，设计公司「缺乏更便宜的选择」。</p>
+<p><b>影响：</b>这是一条完整的成本传导链——代工、封测、材料同步上行，设计公司只剩「向下游转嫁」一条路，2026 年底至 2027 年初的器件二轮涨价是观察终点接受度的窗口。供应商警惕「过度下单」的表态同样重要：若真实需求与囤货被区分开，这轮涨价的斜率会比库存周期更平缓。</p>
+</div>
+<div class="t-novice">
+<p>芯片产业链的各个环节都在涨价：台积电的成熟工艺明年 1 月起涨 3% 到 10%，最先进的再涨 6% 到 8%；国内代工大厂中芯国际上季度平均卖价也涨了 5.7%。做电源管理芯片、驱动芯片、MCU（小控制芯片）的公司扛不住成本，<b>准备在年底到明年初再涨一轮 5% 到两位数</b>。有意思的是，买家怕涨价抢着下单，卖家反而警惕「假需求」，开始核对订单量控制出货。</p>
+<p><b>跟你的关系：</b>你的手机、家电、汽车里的芯片大多是这类「不那么先进但必不可少」的器件。它们二轮涨价如果落地，会慢慢体现在整机价格里；而供应商开始防「囤货」，说明厂家自己也想弄清楚——这轮缺货到底是真的缺，还是被炒起来的。</p>
+</div>
+<span class="src">来源：爱集微（10-06，综合台媒/路透社/Digital Daily） · <a href="https://www.ijiwei.com/n/1115545" target="_blank" rel="noopener">原文</a></span>
+</article>
+<article class="item">
+<h4>
+<span class="t-expert">Rapidus 将协助 17 家企业为其客户开展芯片设计工作，合作方包括东芝信息系统等</span>
+<span class="t-novice">日本芯片新厂拉上 17 家帮手：先帮客户做设计，再争取订单</span>
+</h4>
+<div class="t-expert">
+<p>据财联社 10 月 5 日报道，日本 Rapidus 公司将<b>协助 17 家企业为其客户开展芯片设计工作</b>，合作方包括东芝旗下子公司东芝信息系统等企业。</p>
+<p><b>影响：</b>Rapidus 仍处在 2nm 量产前夜，设计生态是它争取客户的关键短板——一家没有量产实绩的代工厂，客户最缺的是「从设计到制造」的配套。把设计服务网络先铺起来，是把「有技术」变成「有客户」的必要动作；日本国家队对台积电、三星、英特尔的争夺，竞争焦点正在从制程节点延伸到配套服务的完整度。</p>
+</div>
+<div class="t-novice">
+<p>日本的「国家队的晶圆厂」Rapidus 还没正式量产，就先解决了另一件要紧事：它拉上东芝旗下的系统集成商等 <b>17 家企业</b>，帮想用它的工厂造芯片的客户把「设计」环节先做起来。</p>
+<p><b>跟你的关系：</b>造芯片要先设计、再制造。一家新工厂如果只造不帮设计，客户嫌麻烦就不会来。日本厂先用服务把客户黏住，是想在台积电、三星之外给全球芯片公司多一个选择——将来大厂之间的竞争，比的不只是工艺，还有谁的服务更省心。</p>
+</div>
+<span class="src">来源：东方财富（10-05，转财联社） · <a href="https://wap.eastmoney.com/a/202610053888576142.html" target="_blank" rel="noopener">原文</a></span>
+</article>
+</section>
+<section class="panel" id="L3" data-tab="L3" data-label="元器件">
+<div class="sec-h"><h3>元器件与传感器</h3><span class="cnt">0 条（72h 内候选 2 条，达标 0 条）</span></div>
+<div class="sec-note">被动元件、功率器件、连接器与传感器</div>
+<div class="bar"></div>
+</section>
+<section class="panel" id="L4" data-tab="L4" data-label="终端应用">
+<div class="sec-h"><h3>终端与应用</h3><span class="cnt">3 条（72h 内候选 4 条，达标 3 条）</span></div>
+<div class="sec-note">终端需求、智驾落地、算力基建与可穿戴产品</div>
+<div class="bar"></div>
+<article class="item">
+<h4>
+<span class="t-expert">余承东：存储涨价使每部手机成本增加超 200 美元，华为「未来也不得不提高价格」</span>
+<span class="t-novice">华为余承东：内存涨价让每部手机贵了 200 多美元，我们也得涨价了</span>
+</h4>
+<div class="t-expert">
+<p>爱集微 10 月 7 日刊出的会议纪要显示，华为 10 月 6 日披露 9 月 29 日国际媒体圆桌会议内容，华为常务董事余承东表示：<b>「近期存储元器件价格大幅上涨，使每部手机增加的成本已经超过 200 美元」</b>，并称华为手机存储规格较高、成本冲击更明显，「未来我们也不得不提高价格」。此前华为选择自行消化成本，但「这一做法也使公司的整体利润率明显下降」。他同时表示，不少厂商已涨价、华为调整相对缓慢，低端市场压力加大、部分厂商或转向中高端。</p>
+<p><b>影响：</b>这是主流终端大厂首次给出「存储涨价→单机成本」的量化口径（>200 美元/部），存储在整机物料成本中的占比已实质性改写定价模型。华为从「硬扛」转向「提价」，意味着这轮存储涨价正从供应链报价进入终端零售价通道——四季度旗舰定价普遍上移的概率显著上升，低端机型则面临「做不做得起」的选择。</p>
+</div>
+<div class="t-novice">
+<p>华为负责手机的余承东说了一句很直白的话：最近内存、闪存涨得太猛，<b>每部手机的成本已经多了超过 200 美元（约 1400 多元人民币）</b>。之前华为自己扛着没涨价，但利润明显变薄了，所以「未来我们也不得不提高价格」。他还说，其实不少厂商已经悄悄涨过了，便宜的手机以后越来越难做，厂商只能去做中高端。</p>
+<p><b>跟你的关系：</b>这是「内存涨价」第一次被一家大厂换算成「每部手机贵多少钱」。接下来买手机，要么接受涨价、要么发现同价位的配置变缩水（苹果就是这么干的，见下一条）——两条路最后都是消费者买单。</p>
+</div>
+<span class="src">来源：爱集微（10-07，刊出华为 10-06 披露的圆桌纪要） · <a href="https://www.ijiwei.com/n/1115535" target="_blank" rel="noopener">原文</a></span>
+</article>
+<article class="item">
+<h4>
+<span class="t-expert">iPhone 18 Pro 内存从原计划 16GB 缩水至 12GB：Xcode 数据确认，折叠屏 Duo 预计同为 12GB</span>
+<span class="t-novice">苹果新款 iPhone 的内存缩水了：原计划 16GB，最终只给 12GB</span>
+</h4>
+<div class="t-expert">
+<p>爱集微 10 月 7 日快讯，据 Xcode 27 数据，<b>iPhone 18 Pro 系列内存最终从原计划的 16GB 缩水至 12GB</b>；折叠屏 iPhone Duo 预计同样采用 12GB（未获独立验证）。爆料未说明改动原因；报道提及的背景包括 AI 内存需求与内存供应紧张——分析师郭明錤此前称 DRAM 短缺正影响苹果 2026 年的硬件出货安排，但苹果与爆料者均未证实供应短缺与 16GB 方案被取消之间的因果关系。</p>
+<p><b>影响：</b>在余承东披露「每部手机成本 +200 美元」的同周，苹果被曝以降内存规格对冲成本——存储涨价正在从「整机涨价」与「配置缩水」两条路径同时挤压终端。若折叠屏 Duo 同样落地 12GB，旗舰机型的内存分配逻辑将被重写；对存储原厂，终端减配是需求端的第一个反向信号，值得与「AI 抢内存」的多头叙事并置观察。</p>
+</div>
+<div class="t-novice">
+<p>爆料信息显示，苹果下一代旗舰 iPhone 18 Pro 的内存<b>从原计划的 16GB 缩水到了 12GB</b>（开发工具数据确认）；传闻中的折叠屏 iPhone 预计也是 12GB。为什么缩？苹果没说，但时间点很微妙——内存现在又贵又缺，分析师早就说过内存短缺会影响苹果明年的产品安排。</p>
+<p><b>跟你的关系：</b>这是「内存涨价」影响普通消费者的另一种方式：价格不动，配置缩水。同价位买到的东西变少了。华为选择涨价、苹果选择缩配置——两大巨头不同的应对，都是同一场内存涨价的连锁反应。</p>
+</div>
+<span class="src">来源：爱集微（10-07） · <a href="https://www.ijiwei.com/n/1115553" target="_blank" rel="noopener">原文</a></span>
+</article>
+<article class="item">
+<h4>
+<span class="t-expert">韩国推出 4.7 万亿韩元前沿 AI 模型项目：股权投资方式，3.9 万亿韩元购置 1 万块英伟达 Vera Rubin GPU</span>
+<span class="t-novice">韩国要花 35 亿美元搞国产 AI 大模型：先买 1 万块英伟达最新 GPU</span>
+</h4>
+<div class="t-expert">
+<p>据 The Korea Times 10 月 5 日报道，韩国科技信息通信部宣布将推出规模 <b>4.7 万亿韩元（约 35 亿美元）</b>的「前沿 AI 模型」项目，采用<b>股权投资</b>方式（政府可能通过特殊目的公司持股，而非单纯补贴），明年启动并纳入明年预算。资金分配上，<b>3.9 万亿韩元用于购置 1 万块英伟达 Vera Rubin GPU、8000 亿韩元用于训练数据</b>，参与企业须以私人资本配比政府出资。项目目的是缩小韩国与中美最先进 AI 系统的差距、在开源模型领域与中国领先模型竞争；韩国科技部长称「我们将通过突破当前技术局限追求更高目标」，官方并提到「股权投资意味着回报最终可与公众共享」。</p>
+<p><b>影响：</b>韩国把主权 AI 的出资方式从「补贴」升级为「股权共担」——政府出资本、企业配私人资金、收益回归公共，这是主权 AI 融资结构的一次值得跟踪的升级。1 万块 Vera Rubin GPU 的单笔采购也意味着英伟达下一代平台在国家客户中的订单能见度继续拉长，先进 GPU 的供给分配正成为各国 AI 计划的第一约束。</p>
+</div>
+<div class="t-novice">
+<p>韩国宣布了一个约 35 亿美元（4.7 万亿韩元）的大项目：自己搞最顶级的 AI 大模型，缩小和中美差距。有意思的是玩法——政府不是直接发补贴，而是<b>当股东出钱</b>，企业也要掏自己的钱跟着投，将来赚了钱公共还能分享。其中 3.9 万亿韩元专门用来买 1 万块英伟达最新的 GPU，剩下 8000 亿韩元买训练数据。</p>
+<p><b>跟你的关系：</b>现在各国都在「抢 GPU」——谁买得多、买得早，谁的 AI 就跑得快。韩国这种「政府入股、共担收益」的新打法，可能被其他国家效仿；而全球就英伟达一家能稳定供应顶级 GPU，这种抢购只会让先进芯片更紧俏。</p>
+</div>
+<span class="src">来源：The Korea Times（10-05） · <a href="https://www.koreatimes.co.kr/business/tech-science/20261005/korea-to-launch-35-bil-frontier-ai-project-next-year" target="_blank" rel="noopener">原文</a></span>
+</article>
+</section>
+
+
+</div>
+
+<script>
+(function () {
+  var VKEY = 'zaobao-view', TKEY = 'zaobao-tab';
+  var GAP = 8;              /* 卡间距，必须与 CSS 里 .tabs{gap:8px} 一致 */
+  var SWIPE_X = 48;         /* 横向手势判定阈值 px */
+  var SWIPE_DIR_LOCK = 12;  /* 主方向锁定阈值 px */
+
+  function setView(v) {
+    document.body.className = 'view-' + v;
+    var e = document.getElementById('btn-expert') || document.getElementById('be');
+    var n = document.getElementById('btn-novice') || document.getElementById('bn');
+    if (e) e.classList.toggle('on', v === 'expert');
+    if (n) n.classList.toggle('on', v === 'novice');
+    try { localStorage.setItem(VKEY, v); } catch (err) {}
+  }
+  window.setView = setView;
+
+  var panels = [].slice.call(document.querySelectorAll('.panel'));
+  var track = document.getElementById('tabs');
+  var wrapEl = document.querySelector('.deck-wrap');
+  var fadeL = document.getElementById('fadeL');
+  var fadeR = document.getElementById('fadeR');
+  var btnPrev = document.getElementById('deckPrev');
+  var btnNext = document.getElementById('deckNext');
+  var cards = [];
+  var curTab = null;
+
+  /* 按面板的 data-label 生成栏目卡。一个栏目可能由多个面板拼成
+     （今日速览 = 主线 + 信号），同名只生成一张卡。 */
+  if (track) {
+    var seen = {};
+    panels.forEach(function (p) {
+      var t = p.getAttribute('data-tab');
+      if (seen[t]) { return; }
+      seen[t] = 1;
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = p.getAttribute('data-label') || t;
+      b.setAttribute('data-tab', t);
+      b.setAttribute('role', 'tab');
+      b.setAttribute('aria-selected', 'false');
+      b.addEventListener('click', function () {
+        if (b.getAttribute('data-tab') === curTab) { return; }  /* 已选中：不变更、不动画 */
+        showTab(b.getAttribute('data-tab'));
+      });
+      track.appendChild(b);
+      cards.push(b);
+    });
+  }
+
+  function indexOf(t) {
+    for (var i = 0; i < cards.length; i++) {
+      if (cards[i].getAttribute('data-tab') === t) { return i; }
+    }
+    return -1;
+  }
+
+  /* 让第 i 张卡落在视口正中（规范的「零测量」平移公式）：
+     translateX = 视口半宽 - 该卡中心距轨道左缘。
+     卡宽实时读第一张卡的 offsetWidth（响应式断点变化自动适配）；transform
+     用绝对值赋值而非逐次累加，避免误差漂移。 */
+  function centerIndex(i) {
+    if (!track || !wrapEl || !cards.length) { return; }
+    if (i < 0) { i = 0; }
+    if (i > cards.length - 1) { i = cards.length - 1; }
+    var w = cards[0].offsetWidth;
+    if (!w) { return; }
+    var vp = wrapEl.clientWidth;
+    var tx = vp / 2 - (i * (w + GAP) + w / 2);
+    track.style.transform = 'translateX(' + tx + 'px)';
+    /* 渐隐遮罩：仅该侧确有卡被裁出视口才点亮（±2px 容差防亚像素闪烁） */
+    var totalW = cards.length * (w + GAP) - GAP;
+    if (fadeL) { fadeL.classList.toggle('on', tx < -2); }
+    if (fadeR) { fadeR.classList.toggle('on', tx + totalW > vp + 2); }
+    /* 到边界置灰（不循环） */
+    if (btnPrev) { btnPrev.disabled = (i <= 0); }
+    if (btnNext) { btnNext.disabled = (i >= cards.length - 1); }
+  }
+
+  function showTab(t, silent) {
+    var ok = false, i;
+    for (i = 0; i < panels.length; i++) {
+      if (panels[i].getAttribute('data-tab') === t) { ok = true; break; }
+    }
+    if (!ok) t = panels.length ? panels[0].getAttribute('data-tab') : 'main';
+    for (i = 0; i < panels.length; i++) {
+      panels[i].classList.toggle('on', panels[i].getAttribute('data-tab') === t);
+    }
+    for (i = 0; i < cards.length; i++) {
+      var on = cards[i].getAttribute('data-tab') === t;
+      cards[i].classList.toggle('on', on);
+      cards[i].setAttribute('aria-selected', on ? 'true' : 'false');
+    }
+    curTab = t;
+    try { localStorage.setItem(TKEY, t); } catch (err) {}
+    if (history.replaceState) history.replaceState(null, '', '#' + t);
+    var idx = indexOf(t);
+    if (idx >= 0) { centerIndex(idx); }
+    if (!silent) {
+      try { window.scrollTo({ top: 0, behavior: 'auto' }); }
+      catch (err) { window.scrollTo(0, 0); }
+    }
+  }
+  window.showTab = showTab;
+
+  /* 左右箭头：步进 ±1，越界 clamp 到边界（不循环） */
+  function step(delta) {
+    var i = indexOf(curTab);
+    if (i < 0) { i = 0; }
+    var t = i + delta;
+    if (t < 0) { t = 0; }
+    if (t > cards.length - 1) { t = cards.length - 1; }
+    if (t === i || !cards[t]) { return; }
+    showTab(cards[t].getAttribute('data-tab'));
+  }
+  if (btnPrev) { btnPrev.addEventListener('click', function () { step(-1); }); }
+  if (btnNext) { btnNext.addEventListener('click', function () { step(1); }); }
+
+  /* 卡宽是实时读的，跨 420px 断点后重算即可 */
+  window.addEventListener('resize', function () { centerIndex(indexOf(curTab)); });
+
+  /* ── 整页横滑切栏（触摸设备）：左滑 → 下一栏；右滑 → 上一栏 ──
+     首次位移超过阈值即锁定主方向；只有判为横向才 preventDefault —— 这一步
+     顺带压掉了随后的 click，否则在卡片上滑动会「滑动切换 + 点击切换」双触发。
+     纵向不拦截，交给浏览器原生滚动（配合 CSS 的 touch-action:pan-y）。 */
+  var ts = null, dir = null, used = false, netX = 0;
+  document.body.addEventListener('touchstart', function (e) {
+    if (e.touches.length !== 1) { return; }         /* 多指触摸不进入手势流程 */
+    ts = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    dir = null; used = false; netX = 0;
+  }, { passive: true });
+  document.body.addEventListener('touchmove', function (e) {
+    if (!ts || e.touches.length !== 1) { return; }
+    var dx = e.touches[0].clientX - ts.x;
+    var dy = e.touches[0].clientY - ts.y;
+    netX = dx;
+    if (!dir && (Math.abs(dx) > SWIPE_DIR_LOCK || Math.abs(dy) > SWIPE_DIR_LOCK)) {
+      dir = Math.abs(dx) > Math.abs(dy) ? 'h' : 'v';
+    }
+    if (dir === 'h') {
+      if (e.cancelable) { e.preventDefault(); }
+      if (Math.abs(dx) > SWIPE_X) { used = true; }
+    }
+  }, { passive: false });                            /* 必须非 passive，否则 preventDefault 无效 */
+  function touchEnd() {
+    if (ts && dir === 'h' && used) { step(netX < 0 ? 1 : -1); }
+    ts = null; dir = null; used = false; netX = 0;
+  }
+  document.body.addEventListener('touchend', touchEnd, { passive: true });
+  document.body.addEventListener('touchcancel', touchEnd, { passive: true });
+
+  var savedView = null, savedTab = null;
+  try {
+    savedView = localStorage.getItem(VKEY);
+    savedTab = localStorage.getItem(TKEY);
+  } catch (err) {}
+  setView(savedView === 'novice' ? 'novice' : 'expert');
+
+  var hash = (location.hash || '').replace('#', '');
+  showTab(hash || savedTab || 'main', true);
+})();
+</script>
+
+<!-- ARCHIVE-NAV -->
+<a class="a-nav" href="index.html" title="查看往期早报日历">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"></rect><path d="M8 2v4M16 2v4M3 10h18"></path></svg>
+往期日历</a>
+<footer>
+  <!-- DISC --><p class="disclaim">信息来源于网络，重要内容请自行核实</p>
+  <p>每日 08:10 自动生成。</p>
+  <p>事实性内容来自公开检索结果，已逐条标注来源；「影响」与「跟你的关系」两段为分析判断，不构成投资建议。</p>
+</footer>
+
+<button class="to-top" id="toTop" type="button" title="返回顶部" aria-label="返回顶部" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"></path><path d="M5 12l7-7 7 7"></path></svg>
+</button>
+</body>
+</html>
